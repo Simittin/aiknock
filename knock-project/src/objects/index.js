@@ -1,13 +1,7 @@
-// 7 etkileşim nesnesi + Anne NPC. Faz 2 statik metinler — şarkı sözlerinden
-// (Knockin' on Heaven's Door, 1973) ilhamla. Faz 3'te lore dizileri Gemini
-// API çağrılarına yer verecek; bu dosya tek değişim noktası kalacak.
-//
-// Her nesne:
-//   id      — tekil anahtar
-//   name    — etkileşim ipucunda ve diyalog başlığında görünür
-//   kind    — renderer'ın hangi sprite'ı çizeceği
-//   blocking— oyuncu üzerinden geçemiyor mu?
-//   lore    — diyalog sayfaları (Enter ile ilerler). {name} oyuncu adıyla değişir.
+// 7 etkileşim nesnesi. Faz 3'te statik lore yerine AI çağrılarına geçtik;
+// her nesne bir 'role' (inner_voice ya da mom) ve sahnesini AI'ya açıklayan
+// bir 'context' taşır. 'opener' ise diyalog kutusu açılırken oyuncuya
+// gösterilen sahne kuran tek satırlık metin (AI çağrısından önce).
 
 export const objects = {
     letter: {
@@ -15,76 +9,69 @@ export const objects = {
         name: 'Askerlik Celbi',
         kind: 'letter',
         blocking: true,
-        lore: [
-            "Beyaz zarftan siyah mürekkep akıyor — sanki kâğıt kanıyor.",
-            "'Görev yeri: Vietnam. Bu emir geri çevrilemez.'",
-            "Her satır, çocukluğuna bir kapı kapatıyor, {name}."
-        ]
+        role: 'inner_voice',
+        questionTarget: 3,
+        opener: "Beyaz zarftan siyah mürekkep akıyor — sanki kâğıt kanıyor.",
+        context: "Karakter elinde Vietnam askerlik celbini tutuyor. Geri dönüşsüz bir emir. Bu mektup, çocukluğunu kapatan ve onu cennetin kapısına yönlendiren ilk dokunuş."
     },
     toy: {
         id: 'toy',
         name: 'Çocukluk Oyuncağı',
         kind: 'toy',
         blocking: true,
-        lore: [
-            "Tüyleri yıpranmış, gözleri matlaşmış bir oyuncak ayı.",
-            "Onu tutarken parmakların hâlâ küçük sandığını hissediyor.",
-            "Ama artık değiller. Bu masumiyeti burada bırakıyorsun, {name}."
-        ]
+        role: 'inner_voice',
+        questionTarget: 3,
+        opener: "Tüyleri yıpranmış, gözleri matlaşmış bir oyuncak ayı yerde duruyor.",
+        context: "Karakterin çocukken her gece kucakladığı oyuncak ayı. Geride bırakılan masumiyetin somut hali. Onu ardında bırakacak."
     },
     guitar: {
         id: 'guitar',
         name: 'Gitar',
         kind: 'guitar',
         blocking: true,
-        lore: [
-            "Tellerden biri kopmuş. Tahtasında çalınmamış şarkıların izi var.",
-            "Bir başka hayatta belki onun çalanı sen olurdun.",
-            "Bu hayatta ise eline tutuşturulan şey hiç bu kadar hafif değil."
-        ]
+        role: 'inner_voice',
+        questionTarget: 3,
+        opener: "Tellerden biri kopmuş. Tahtasında çalınmamış şarkıların izi var.",
+        context: "Karakterin sanatçı kimliği, yaşamadığı bir kariyer, çalmadığı şarkılar. Belki başka bir hayatta o, savaşçı değil, müzisyen olurdu. Bu gitar, kaybolmuş bir gelecektir."
     },
     gun: {
         id: 'gun',
         name: 'Eski Silah',
         kind: 'gun',
         blocking: true,
-        lore: [
-            "Babanın silahı duvarda asılı. Ağırlığı havayı çökertiyor.",
-            "'Put my guns in the ground...'",
-            "Toprağa gömseydim, içimde bu kadar yer eder miydi acaba?"
-        ]
+        role: 'inner_voice',
+        questionTarget: 3,
+        opener: "Babanın silahı duvarda asılı. Ağırlığı havayı çökertiyor.",
+        context: "Babadan kalma eski tüfek. Şarkının 'put my guns in the ground' satırına dokunan nesne. Silah, hem mirası hem de ona biçilen rolü temsil eder."
     },
     badge: {
         id: 'badge',
         name: 'Rozet',
         kind: 'badge',
         blocking: true,
-        lore: [
-            "Masada soğuk bir parıltı. Üzerinde sırtladığın isim yazılı.",
-            "'Take this badge off of me, I can't use it anymore...'",
-            "Bunu taşımak, kim olduğunu unutmaktan geçiyor, {name}."
-        ]
+        role: 'inner_voice',
+        questionTarget: 3,
+        opener: "Masada soğuk bir parıltı. Üzerinde sırtlanması gereken bir isim.",
+        context: "Pirinçten yıldız rozet. Şarkının 'take this badge off of me' satırının somut karşılığı. Karakter bu rozeti üzerinde taşımak zorunda — ama içten içe atmak ister."
     },
     window: {
         id: 'window',
         name: 'Pencere',
         kind: 'window',
         blocking: true,
-        lore: [
-            "Camda fırtına. Ufukta o uzun, kara bulut iniyor.",
-            "'That long black cloud is comin' down...'",
-            "Gökyüzü bir kapı çalıyor, {name}. Hangi kapıyı, henüz bilmiyorsun."
-        ]
+        role: 'inner_voice',
+        questionTarget: 3,
+        opener: "Camda fırtına. Ufukta o uzun, kara bulut iniyor.",
+        context: "Mutfak penceresinin önünde dururken dışarıdaki fırtınayı izliyor. 'That long black cloud is comin' down' satırının görsel karşılığı. Gökyüzü adeta bir kapı gibi çalınıyor."
     },
     mom: {
         id: 'mom',
         name: 'Anne',
         kind: 'npc',
         blocking: true,
-        lore: [
-            "Annen masada oturuyor. Elleri dizinde, gözleri seninle.",
-            "'Mama... gitmek zorunda olduğunu biliyorum, evlat.'",
-            "'Bana söylemek istediğin son bir şey var mı, {name}?'"
-        ]
+        role: 'mom',
+        questionTarget: 6,
+        opener: "Annen masada oturuyor. Elleri dizinde, gözleri seninle.",
+        context: "Final veda sahnesi. Anne henüz konuşmadı; oğlunu süzüyor."
     },
 };

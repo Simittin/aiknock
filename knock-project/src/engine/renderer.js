@@ -1,6 +1,7 @@
 import { TILE, COLS, ROWS, VIEW_W, VIEW_H, DISPLAY_W, DISPLAY_H, SPRITE_SIZE, PAL, WALL, DOOR_R, DOOR_L } from '../config.js';
 import { objects as OBJECT_DB } from '../objects/index.js';
 import { getSprites } from '../assets/sprites.js';
+import { isCompleted } from '../state/scores.js';
 
 let ctx = null;
 let sprites = null;
@@ -45,7 +46,21 @@ function drawObjects(objs) {
         if (!def) continue;
         const sprite = sprites.objects[def.kind];
         if (!sprite) continue;
+        const done = isCompleted(o.id);
+        if (done) ctx.globalAlpha = 0.45;
         ctx.drawImage(sprite, o.col * TILE, o.row * TILE);
+        if (done) {
+            ctx.globalAlpha = 1;
+            // Tamamlanmış nesnenin üstüne küçük tik işareti
+            ctx.fillStyle = PAL.brass;
+            const x = o.col * TILE;
+            const y = o.row * TILE;
+            ctx.fillRect(x + 11, y + 11, 1, 1);
+            ctx.fillRect(x + 12, y + 12, 1, 1);
+            ctx.fillRect(x + 13, y + 11, 1, 1);
+            ctx.fillRect(x + 14, y + 10, 1, 1);
+        }
+        ctx.globalAlpha = 1;
     }
 }
 
@@ -69,7 +84,8 @@ function drawPlayer(player) {
 function drawHint(obj) {
     const def = OBJECT_DB[obj.id];
     if (!def) return;
-    const text = `[E] ${def.name.toUpperCase()}`;
+    const done = isCompleted(obj.id);
+    const text = done ? `[X] TAMAMLANDI` : `[E] ${def.name.toUpperCase()}`;
     const objCx = obj.col * TILE + TILE / 2;
     const objTop = obj.row * TILE;
 

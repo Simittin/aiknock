@@ -15,18 +15,32 @@
                 <div id="hud">
                     <span id="hud-player">ASKER: —</span>
                     <span id="hud-room">KONUM: —</span>
-                    <span id="hud-controls">[WASD] HAREKET</span>
+                    <span id="hud-progress">YANSIMALAR: 0/7</span>
+                    <span id="hud-controls">[WASD] HAREKET     [E] İNCELE</span>
+                </div>
+                <div id="burden-bar-wrapper">
+                    <span class="bar-label">RUHSAL YÜK</span>
+                    <div id="burden-bar"><div id="burden-fill"></div></div>
+                    <span id="burden-score">0</span><span class="bar-pct">%</span>
                 </div>
             </div>
 
             <canvas id="game-canvas" tabindex="0"></canvas>
+
+            <div id="api-warning" class="hidden">
+                ! GEMINI_API_KEY tanımlı değil — knock-project/.env içine GEMINI_API_KEY=... ekleyip yenile.
+            </div>
         </div>
 
         <div id="dialog-overlay" class="hidden">
             <div id="dialog-box">
                 <div id="dialog-title">—</div>
                 <div id="dialog-text"></div>
-                <div id="dialog-hint">[ENTER] DEVAM     [ESC] KAPAT</div>
+                <div id="dialog-input-area">
+                    <span class="prompt-symbol">&gt;</span>
+                    <input id="dialog-input" type="text" autocomplete="off" spellcheck="false" placeholder="ne hissediyorsun?">
+                </div>
+                <div id="dialog-hint">[ENTER] GÖNDER     [ESC] AYRIL</div>
             </div>
         </div>
 

@@ -10,9 +10,18 @@ const TRACKED = new Set([
     'e', 'enter', 'escape'
 ]);
 
+function isEditable(el) {
+    if (!el) return false;
+    const tag = el.tagName;
+    return tag === 'INPUT' || tag === 'TEXTAREA' || el.isContentEditable;
+}
+
 window.addEventListener('keydown', (e) => {
     const k = e.key.toLowerCase();
     if (!TRACKED.has(k)) return;
+    // Bir text input/textarea odaklıysa harfi engelleme — diyalog input'una
+    // WASD/E gibi tuşlar normal yazılabilsin.
+    if (isEditable(e.target)) return;
     if (!keys[k]) justPressed.add(k);
     keys[k] = true;
     e.preventDefault();
@@ -20,7 +29,9 @@ window.addEventListener('keydown', (e) => {
 
 window.addEventListener('keyup', (e) => {
     const k = e.key.toLowerCase();
-    if (TRACKED.has(k)) keys[k] = false;
+    if (!TRACKED.has(k)) return;
+    if (isEditable(e.target)) return;
+    keys[k] = false;
 });
 
 export function isDown(...names) {
