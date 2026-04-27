@@ -13,12 +13,27 @@
             <div id="header">
                 <h1>1973: VEDA YOLU</h1>
                 <div id="hud">
+                    <span id="hud-player">ASKER: —</span>
                     <span id="hud-room">KONUM: —</span>
                     <span id="hud-controls">[WASD] HAREKET</span>
                 </div>
             </div>
 
             <canvas id="game-canvas" tabindex="0"></canvas>
+        </div>
+
+        <div id="name-overlay" class="hidden">
+            <div id="name-box">
+                <p class="name-line">&gt; KAYIT ARŞİVİ — 1973</p>
+                <p class="name-line dim">&gt; KİMLİĞİNİ DOĞRULA, ASKER.</p>
+                <label for="name-input" class="name-label">ADIN:</label>
+                <div class="name-row">
+                    <span class="prompt-symbol">&gt;</span>
+                    <input id="name-input" type="text" maxlength="20" autocomplete="off" spellcheck="false">
+                </div>
+                <p id="name-error" class="name-error"></p>
+                <button id="name-submit">[ GİRİŞ ]</button>
+            </div>
         </div>
     </div>
 
