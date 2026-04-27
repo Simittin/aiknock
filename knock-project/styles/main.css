@@ -88,6 +88,59 @@ body {
     letter-spacing: 1px;
 }
 
+/* Diyalog kutusu (etkileşim overlay) */
+#dialog-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 8vh;
+    background: rgba(0, 0, 0, 0.55);
+    pointer-events: none;
+}
+
+#dialog-overlay.hidden { display: none; }
+
+#dialog-box {
+    pointer-events: auto;
+    width: min(640px, 90%);
+    border: 2px solid var(--phosphor);
+    background: rgba(0, 12, 0, 0.94);
+    box-shadow: 0 0 24px rgba(51, 255, 51, 0.45), inset 0 0 18px rgba(51, 255, 51, 0.12);
+    padding: 16px 20px 12px;
+    color: var(--phosphor);
+    font-size: 15px;
+    line-height: 1.5;
+    letter-spacing: 0.5px;
+}
+
+#dialog-title {
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: var(--phosphor-dim);
+    border-bottom: 1px dashed var(--phosphor-dim);
+    padding-bottom: 6px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+#dialog-text {
+    min-height: 56px;
+    margin-bottom: 12px;
+    color: #c8ffc8;
+}
+
+#dialog-hint {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--phosphor-dim);
+    text-align: right;
+    border-top: 1px dashed var(--phosphor-dim);
+    padding-top: 6px;
+}
+
 /* İsim giriş ekranı */
 #name-overlay {
     position: absolute;
@@ -177,8 +230,9 @@ body {
     display: block;
     image-rendering: pixelated;
     image-rendering: crisp-edges;
-    background: #020a02;
+    background: #0a0708;
     border: 1px solid var(--phosphor);
     box-shadow: 0 0 12px rgba(51, 255, 51, 0.25), inset 0 0 16px rgba(51, 255, 51, 0.08);
     outline: none;
+    /* Native 320x192 -> 2x büyütme retro pixel hissi için */
 }

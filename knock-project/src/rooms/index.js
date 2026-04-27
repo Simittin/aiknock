@@ -1,13 +1,19 @@
-// Oda kayıt defteri. Yeni oda eklemek için dosyasını import et ve burada listele.
 import { COLS } from '../config.js';
-import { kitchen } from './kitchen.js';
-import { hallway } from './hallway.js';
+import { bedroom }    from './bedroom.js';
+import { livingRoom } from './living_room.js';
+import { kitchen }    from './kitchen.js';
 
-export const rooms = { kitchen, hallway };
+export const rooms = {
+    bedroom,
+    living_room: livingRoom,
+    kitchen,
+};
 
-// Kapı geçiş tablosu: hangi kapı, hangi odaya, hangi tile'a düşürür?
-// Anahtar formatı: `${roomId}:${tileType}`
+// Hub yapısı: oturma odası merkez. Yatak odası ↔ Oturma Odası ↔ Mutfak.
+// Her geçiş, hedef odanın kapısının iç tarafına spawn eder.
 export const doorTransitions = {
-    'kitchen:DOOR_R': { to: 'hallway', spawn: { col: 1, row: 6 } },
-    'hallway:DOOR_L': { to: 'kitchen', spawn: { col: COLS - 2, row: 6 } },
+    'bedroom:DOOR_R':     { to: 'living_room', spawn: { col: 1,         row: 6 } },
+    'living_room:DOOR_L': { to: 'bedroom',     spawn: { col: COLS - 2,  row: 6 } },
+    'living_room:DOOR_R': { to: 'kitchen',     spawn: { col: 1,         row: 6 } },
+    'kitchen:DOOR_L':     { to: 'living_room', spawn: { col: COLS - 2,  row: 6 } },
 };

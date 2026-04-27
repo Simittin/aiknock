@@ -1,18 +1,21 @@
-// Tuş durumlarını basit bir map'te tutar. WASD ve ok tuşları aynı şeyi yapar.
+// Tuş durumu + tek-atış (one-shot) desteği. Hareket için isDown, etkileşim
+// için consumeKey kullanılır — basılı tutmak tetiği bir kez sayar.
 
 const keys = Object.create(null);
+const justPressed = new Set();
 
 const TRACKED = new Set([
     'w', 'a', 's', 'd',
-    'arrowup', 'arrowdown', 'arrowleft', 'arrowright'
+    'arrowup', 'arrowdown', 'arrowleft', 'arrowright',
+    'e', 'enter', 'escape'
 ]);
 
 window.addEventListener('keydown', (e) => {
     const k = e.key.toLowerCase();
-    if (TRACKED.has(k)) {
-        keys[k] = true;
-        e.preventDefault();
-    }
+    if (!TRACKED.has(k)) return;
+    if (!keys[k]) justPressed.add(k);
+    keys[k] = true;
+    e.preventDefault();
 });
 
 window.addEventListener('keyup', (e) => {
@@ -22,6 +25,18 @@ window.addEventListener('keyup', (e) => {
 
 export function isDown(...names) {
     return names.some((n) => keys[n]);
+}
+
+export function consumeKey(name) {
+    if (justPressed.has(name)) {
+        justPressed.delete(name);
+        return true;
+    }
+    return false;
+}
+
+export function clearPendingKeys() {
+    justPressed.clear();
 }
 
 export function getMoveVector() {
