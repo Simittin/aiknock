@@ -1,0 +1,99 @@
+:root {
+    --phosphor: #33ff33;
+    --phosphor-dim: #1a8a1a;
+    --warn: #ff5050;
+    --bg: #050505;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    background-color: var(--bg);
+    color: var(--phosphor);
+    font-family: 'Courier New', Courier, monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    text-shadow: 0 0 4px var(--phosphor), 0 0 8px rgba(51, 255, 51, 0.4);
+}
+
+.crt {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* CRT scanlines */
+.crt::before {
+    content: " ";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.28) 50%),
+        linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.04));
+    background-size: 100% 3px, 4px 100%;
+    z-index: 2;
+    pointer-events: none;
+    animation: flicker 0.15s infinite;
+}
+
+/* Vignette */
+.crt::after {
+    content: " ";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.7) 100%);
+    z-index: 3;
+    pointer-events: none;
+}
+
+@keyframes flicker {
+    0%   { opacity: 0.97; }
+    50%  { opacity: 1; }
+    100% { opacity: 0.98; }
+}
+
+#game-container {
+    border: 2px solid var(--phosphor);
+    box-shadow: 0 0 20px rgba(51, 255, 51, 0.4), inset 0 0 30px rgba(51, 255, 51, 0.08);
+    padding: 16px 20px;
+    background: rgba(0, 10, 0, 0.4);
+    position: relative;
+    z-index: 1;
+}
+
+#header {
+    border-bottom: 1px dashed var(--phosphor-dim);
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+}
+
+#header h1 {
+    margin: 0 0 6px 0;
+    font-size: 18px;
+    letter-spacing: 3px;
+}
+
+#hud {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--phosphor-dim);
+    letter-spacing: 1px;
+}
+
+#game-canvas {
+    display: block;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    background: #020a02;
+    border: 1px solid var(--phosphor);
+    box-shadow: 0 0 12px rgba(51, 255, 51, 0.25), inset 0 0 16px rgba(51, 255, 51, 0.08);
+    outline: none;
+}
