@@ -225,6 +225,30 @@ body.high-burden {
     text-shadow: 0 0 4px rgba(200, 152, 70, 0.6);
 }
 
+/* Çoktan seçmeli şıklar */
+.dlg-choices {
+    margin: 8px 0 4px;
+    padding: 6px 0 4px 4px;
+    border-left: 2px solid var(--brass);
+}
+.dlg-choice {
+    margin: 4px 0;
+    padding: 4px 8px;
+    color: #ffe89a;
+    font-size: 14px;
+    transition: background 0.15s, color 0.15s;
+}
+.dlg-choice:hover {
+    background: rgba(200, 152, 70, 0.08);
+    color: #fff5c8;
+}
+.dlg-choice-num {
+    color: var(--brass);
+    font-weight: bold;
+    text-shadow: 0 0 4px rgba(200, 152, 70, 0.7);
+}
+.dlg-choice-text { color: inherit; }
+
 #dialog-input-area {
     display: flex;
     align-items: center;

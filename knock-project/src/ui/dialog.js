@@ -1,11 +1,8 @@
-// Q&A + puanlama diyalog kutusu.
+// Q&A + puanlama + açık/şıklı karışık diyalog kutusu.
 //
-// Akış:
-//   open -> opener gösterilir + AI ilk repliği (introduce + Q1)
-//   user submit -> sentiment (arka plan) + Gemini JSON
-//                  -> reply + score badge (oyuncunun mesajının yanına)
-//                  -> sıradaki soru
-//   is_final=true -> closing reply + "Bu yansımayı tamamladın" + auto-close
+// Açık uçlu turda: input görünür, oyuncu yazar.
+// Şıklı turda: input gizlenir, 3 seçenek render olur, 1/2/3 ile seçilir.
+// Seçilen şık normal cevap gibi sentiment + AI puanlamasına gider (uniform).
 
 import { callGeminiQA } from '../ai/gemini.js';
 import { analyzeAndApply, ensureSentimentLoaded } from '../ai/sentiment.js';
@@ -22,10 +19,11 @@ let activeObject = null;
 let history = [];
 let answeredCount = 0;
 let busy = false;
-let locked = false;     // kapanış sonrası input dondurulur
+let locked = false;
 let onCloseCb = null;
 let dotTimer = null;
 let autoCloseTimer = null;
+let activeChoices = null;     // [{text, label}] | null
 
 const $ = (id) => document.getElementById(id);
 
@@ -75,17 +73,77 @@ function stopThinking() {
     if (t) t.remove();
 }
 
-function setHint(text) {
-    $('dialog-hint').textContent = text;
+function setHint(text) { $('dialog-hint').textContent = text; }
+
+// --- Açık vs şıklı UI mod geçişleri ---
+function hideInputArea() {
+    $('dialog-input-area').style.display = 'none';
+    $('dialog-input').disabled = true;
 }
 
-function setInputDisabled(disabled) {
-    const inp = $('dialog-input');
-    inp.disabled = disabled;
-    if (!disabled) inp.focus();
+function showInputArea() {
+    $('dialog-input-area').style.display = '';
+    $('dialog-input').disabled = false;
+    $('dialog-input').focus();
 }
 
-// --- Diyalog yönetimi ---
+function clearChoices() {
+    const block = $('dialog-text').querySelector('.dlg-choices');
+    if (block) block.remove();
+    activeChoices = null;
+}
+
+function renderChoices(choices) {
+    clearChoices();
+    const log = $('dialog-text');
+    const block = document.createElement('div');
+    block.className = 'dlg-choices';
+    choices.forEach((c, i) => {
+        const line = document.createElement('div');
+        line.className = 'dlg-choice';
+        const num = document.createElement('span');
+        num.className = 'dlg-choice-num';
+        num.textContent = `[${i + 1}]`;
+        const txt = document.createElement('span');
+        txt.className = 'dlg-choice-text';
+        txt.textContent = ' ' + c.text;
+        line.appendChild(num);
+        line.appendChild(txt);
+        block.appendChild(line);
+    });
+    log.appendChild(block);
+    log.scrollTop = log.scrollHeight;
+    activeChoices = choices;
+}
+
+// --- Klavye dinleyicileri ---
+function onInputKey(e) {
+    e.stopPropagation();
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        onSubmit();
+    } else if (e.key === 'Escape') {
+        e.preventDefault();
+        closeDialog();
+    }
+}
+
+function onChoiceKey(e) {
+    if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        closeDialog();
+        return;
+    }
+    if (!activeChoices) return;
+    const idx = ['1', '2', '3'].indexOf(e.key);
+    if (idx === -1 || !activeChoices[idx]) return;
+    e.preventDefault();
+    e.stopPropagation();
+    selectChoice(idx);
+}
+
+// --- Akış ---
 function buildSystem() {
     const def = activeObject;
     const burden = getBurden();
@@ -98,28 +156,23 @@ function buildSystem() {
 
 async function fetchReply(userText, isOpening) {
     busy = true;
-    setInputDisabled(true);
+    hideInputArea();
+    clearChoices();
     startThinking();
 
     try {
         if (!isOpening) {
-            // Sentiment arka planda — Gemini'yi blokelemez
             analyzeAndApply(userText).catch((err) => console.warn('Sentiment hata:', err));
         }
 
         const systemPrompt = buildSystem();
-        const data = await callGeminiQA({
-            systemPrompt,
-            history,
-            userText,
-        });
+        const data = await callGeminiQA({ systemPrompt, history, userText });
 
         history.push({ role: 'user',  text: userText });
         history.push({ role: 'model', text: data.reply });
 
         stopThinking();
 
-        // Skor rozeti — oyuncunun bir önceki cümlesine eklenir
         if (!isOpening && (typeof data.score === 'number' || data.label)) {
             annotateLastPlayer(data.score, data.label);
             recordTurn(activeObject.id, data.score, data.label);
@@ -128,22 +181,25 @@ async function fetchReply(userText, isOpening) {
         appendLine(data.reply, activeObject.role === 'mom' ? 'dlg-mom' : 'dlg-voice');
 
         if (data.is_final) {
-            // Kapanış: input kilitlenir, tamamlama mesajı + auto-close
             locked = true;
             markCompleted(activeObject.id);
             appendLine('— Bu yansımayı tamamladın —', 'dlg-system');
             setHint('[ESC] AYRIL');
-            setInputDisabled(true);
+            hideInputArea();
             scheduleAutoClose();
+        } else if (data.choices) {
+            renderChoices(data.choices);
+            setHint('[1/2/3] SEÇ     [ESC] AYRIL');
         } else {
+            showInputArea();
             setHint('[ENTER] CEVAPLA     [ESC] AYRIL');
         }
     } catch (err) {
         stopThinking();
         appendLine(`> ${err.message || 'Bağlantı koptu.'}`, 'dlg-error');
+        if (!locked) showInputArea();
     } finally {
         busy = false;
-        if (!locked) setInputDisabled(false);
     }
 }
 
@@ -163,15 +219,13 @@ async function onSubmit() {
     await fetchReply(text, false);
 }
 
-function onInputKey(e) {
-    e.stopPropagation();
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        onSubmit();
-    } else if (e.key === 'Escape') {
-        e.preventDefault();
-        closeDialog();
-    }
+async function selectChoice(idx) {
+    if (busy || locked) return;
+    const choice = activeChoices[idx];
+    clearChoices();
+    appendLine(choice.text, 'dlg-player');
+    answeredCount++;
+    await fetchReply(choice.text, false);
 }
 
 export function isDialogOpen() {
@@ -186,6 +240,7 @@ export async function openConversation({ objectId, onClose }) {
     answeredCount = 0;
     busy = false;
     locked = false;
+    activeChoices = null;
     onCloseCb = onClose || null;
 
     $('dialog-title').textContent = activeObject.name.toUpperCase();
@@ -197,9 +252,11 @@ export async function openConversation({ objectId, onClose }) {
     $('dialog-overlay').classList.remove('hidden');
     $('dialog-input').value = '';
     $('dialog-input').placeholder = 'cevap yaz...';
-    $('dialog-input').addEventListener('keydown', onInputKey);
 
-    ensureSentimentLoaded().catch(() => { /* hata UI'da gösterilir */ });
+    $('dialog-input').addEventListener('keydown', onInputKey);
+    window.addEventListener('keydown', onChoiceKey);
+
+    ensureSentimentLoaded().catch(() => { /* sessizce geç */ });
 
     await fetchReply(openingNudge(activeObject.role), true);
 }
@@ -208,7 +265,9 @@ export function closeDialog() {
     if (!isDialogOpen()) return;
     $('dialog-overlay').classList.add('hidden');
     $('dialog-input').removeEventListener('keydown', onInputKey);
+    window.removeEventListener('keydown', onChoiceKey);
     stopThinking();
+    clearChoices();
     if (autoCloseTimer) { clearTimeout(autoCloseTimer); autoCloseTimer = null; }
     const cb = onCloseCb;
     activeObject = null;

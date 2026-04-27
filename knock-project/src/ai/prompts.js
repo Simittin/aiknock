@@ -34,6 +34,16 @@ PUAN REHBERİ:
 - 3-5: kaçışta, klişe, savunmacı
 - 0-2: alaycı, troll, ilgisiz
 
+ŞIK MEKANİĞİ — HER TURDA KARAR VER:
+- Açık uçlu mu, çoktan seçmeli mi olacağına SEN karar ver. İkisini birden harmanla.
+- Eğer soru DERİN BİR YÜZLEŞME / refleksiyon istiyorsa (oyuncunun kendi cümlesi gerek):
+    -> choices alanını boş bırak ya da hiç gönderme.
+- Eğer soru HIZLI BİR DURUŞ / KARAR / KİMLİK testi ise (oyuncunun bir tutum seçmesi yeterliyse):
+    -> choices alanına TAM 3 seçenek koy. Her biri 3-8 kelimelik kısa bir cümle olsun.
+    -> Her seçenek farklı bir DURUŞU temsil etsin (örn: kabullenmiş / kaçan / başkaldıran).
+    -> Her seçeneğin label alanına o duruşun etiketini yaz ("kabullenmiş", "kaçışta", "defiance" vb).
+- Açık uçlu ile şıklı sorular arasında geçişe izin ver — peş peşe aynı tipte olmasınlar.
+
 ${isClosing
     ? 'Bu son turdur. Sadece kapanış cümlesi yaz, soru sorma, is_final=true.'
     : isLast

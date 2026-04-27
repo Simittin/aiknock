@@ -14,6 +14,17 @@ const QA_SCHEMA = {
         score:    { type: 'integer' },
         label:    { type: 'string' },
         is_final: { type: 'boolean' },
+        choices: {
+            type: 'array',
+            items: {
+                type: 'object',
+                properties: {
+                    text:  { type: 'string' },
+                    label: { type: 'string' },
+                },
+                required: ['text'],
+            },
+        },
     },
     required: ['reply', 'is_final'],
 };
@@ -65,10 +76,21 @@ export async function callGeminiQA({ systemPrompt, history, userText }) {
         // Şema fallback — beklenmedik bir metin gelirse kırılma
         return { reply: raw.trim(), is_final: false };
     }
+    let choices = null;
+    if (Array.isArray(parsed.choices) && parsed.choices.length === 3) {
+        choices = parsed.choices
+            .filter((c) => c && c.text)
+            .map((c) => ({
+                text:  String(c.text).trim(),
+                label: c.label ? String(c.label).trim() : '',
+            }));
+        if (choices.length !== 3) choices = null;
+    }
     return {
         reply:    String(parsed.reply || '').trim(),
         score:    typeof parsed.score === 'number' ? parsed.score : null,
         label:    parsed.label ? String(parsed.label).trim() : null,
         is_final: !!parsed.is_final,
+        choices,
     };
 }
