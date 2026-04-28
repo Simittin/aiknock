@@ -120,9 +120,25 @@ export function tickFinale() {
             document.getElementById('ending-text-tr').textContent = t.tr;
             document.getElementById('ending-text').classList.add('visible');
             phase = 'text';
+            phaseTimer = 300; // 5sn @ 60fps -> credits roll başlasın
         }
         return;
     }
 
-    // 'text' / 'done' — sonsuza dek kilitli kalır
+    if (phase === 'text') {
+        if (--phaseTimer <= 0) {
+            startCredits();
+            phase = 'credits';
+        }
+        return;
+    }
+
+    // 'credits' / 'done' — credits CSS animasyonu çalışıyor, sonsuza dek kilitli
+}
+
+function startCredits() {
+    // Heavy ending shake'i kapat — credits okunabilsin
+    const container = document.querySelector('.crt');
+    container.classList.remove('ending-heavy');
+    document.getElementById('credits-overlay').classList.add('visible');
 }

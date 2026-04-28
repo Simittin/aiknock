@@ -244,6 +244,111 @@ body.high-burden {
     75%      { transform: translate(-1px, -2px); }
 }
 
+/* --- Credits roll (outro) --- */
+#credits-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 7;
+    background: #050505;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 1.5s ease;
+    pointer-events: none;
+    font-family: 'Courier New', monospace;
+}
+#credits-overlay.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#credits-content {
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    text-align: center;
+    color: var(--phosphor);
+    padding: 0 24px;
+    transform: translateY(100vh);
+}
+#credits-overlay.visible #credits-content {
+    animation: credits-scroll 75s linear forwards;
+}
+@keyframes credits-scroll {
+    from { transform: translateY(100vh); }
+    to   { transform: translateY(calc(-100% - 8vh)); }
+}
+
+.cr-section {
+    margin: 50px auto;
+    max-width: 540px;
+}
+.cr-finale-head {
+    font-size: 18px;
+    letter-spacing: 5px;
+    color: var(--brass);
+    text-shadow: 0 0 10px rgba(200, 152, 70, 0.6);
+    margin: 6px 0;
+}
+.cr-narrative p {
+    margin: 14px auto;
+    line-height: 1.7;
+    font-style: italic;
+    color: #c8ffc8;
+    font-size: 15px;
+}
+.cr-divider {
+    color: var(--brass);
+    margin: 70px 0;
+    letter-spacing: 12px;
+    font-size: 14px;
+    text-align: center;
+}
+.cr-role {
+    font-size: 11px;
+    letter-spacing: 5px;
+    color: var(--phosphor-dim);
+    font-weight: normal;
+    margin: 0 0 10px;
+    text-transform: uppercase;
+}
+.cr-name {
+    font-size: 19px;
+    color: var(--phosphor);
+    margin: 4px 0;
+    letter-spacing: 1px;
+    text-shadow: 0 0 4px rgba(51, 255, 51, 0.4);
+}
+.cr-tribute {
+    font-size: 24px;
+    color: var(--brass);
+    margin: 6px 0 4px;
+    letter-spacing: 3px;
+    text-shadow: 0 0 8px rgba(200, 152, 70, 0.5);
+}
+.cr-tribute-sub {
+    font-size: 13px;
+    color: #c8a878;
+    font-style: italic;
+    letter-spacing: 1px;
+}
+.cr-tagline {
+    font-size: 24px;
+    letter-spacing: 8px;
+    color: var(--brass);
+    text-shadow: 0 0 12px rgba(200, 152, 70, 0.6);
+    margin: 80px 0 12px;
+}
+.cr-tagline-sub {
+    font-size: 14px;
+    color: var(--phosphor-dim);
+    font-style: italic;
+    letter-spacing: 2px;
+}
+.cr-final {
+    margin-bottom: 80px;
+}
+
 /* --- Diyalog kutusu (multi-turn AI) --- */
 #dialog-overlay {
     position: absolute;
