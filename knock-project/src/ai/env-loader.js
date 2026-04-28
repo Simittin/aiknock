@@ -6,7 +6,8 @@ let cached = null;
 export async function getApiKey() {
     if (cached !== null) return cached;
     try {
-        const res = await fetch('.env');
+        // Cache-bust: tarayıcı .env'i cache'lemesin diye query string + no-store
+        const res = await fetch(`.env?t=${Date.now()}`, { cache: 'no-store' });
         if (!res.ok) {
             cached = '';
             return cached;
