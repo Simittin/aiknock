@@ -12,6 +12,7 @@
 import { TILE, PLAYER_SIZE, WALK_TICKS } from '../config.js';
 import { getBurden } from '../state/burden.js';
 import { getCompletedCount } from '../state/scores.js';
+import * as Audio from '../audio/audio.js';
 
 const TOTAL_OBJECTS = 7;
 const HEAVY_THRESHOLD = 50;
@@ -109,6 +110,9 @@ export function tickFinale() {
             overlay.classList.add(isHeavy ? 'heavy' : 'light');
             overlay.classList.add('visible');
             phaseTimer = isHeavy ? 240 : 150;  // ~4s heavy, ~2.5s light @60fps
+            // Ambient sesleri yavaşça sustur, kapı çalış teması başlasın
+            Audio.fadeOutAmbient(isHeavy ? 4 : 2.5);
+            Audio.playKnockTheme();
         }
         return;
     }

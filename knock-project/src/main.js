@@ -7,6 +7,7 @@ import { onBurdenChange, getBurden, resetBurden, setBurden } from './state/burde
 import { onScoresChange, getCompletedCount, getTotalScore, resetScores, markCompleted } from './state/scores.js';
 import { clearProfile } from './state/profile.js';
 import { getApiKey } from './ai/env-loader.js';
+import * as Audio from './audio/audio.js';
 
 const TOTAL_OBJECTS = 7;
 
@@ -18,6 +19,7 @@ const burdenScoreEl = document.getElementById('burden-score');
 const burdenFillEl  = document.getElementById('burden-fill');
 const hudProgress   = document.getElementById('hud-progress');
 
+let lastBurdenSeen = 0;
 function paintBurden(score) {
     burdenScoreEl.textContent = String(score);
     burdenFillEl.style.width = `${score}%`;
@@ -27,6 +29,10 @@ function paintBurden(score) {
     const b = Math.round(60  + (40  - 60) * (score / 100));
     burdenFillEl.style.background = `rgb(${r}, ${g}, ${b})`;
     document.body.classList.toggle('high-burden', score >= 70);
+    // Ses hook'ları: drone burden'a göre kararsızlaşır, ani sıçrama varsa kalp atışı
+    Audio.setDroneBurden(score);
+    if (score - lastBurdenSeen >= 7) Audio.playBurdenSpike();
+    lastBurdenSeen = score;
 }
 
 async function checkApiKey() {
@@ -70,10 +76,17 @@ async function boot() {
     // 3. Şimdi oyun ekranı belirir
     gameContainer.classList.remove('pre-intro');
 
+    // Ses motorunu başlat — intro space gesture'ı user gesture sayılır
+    Audio.start();
+    Audio.startRain(0.4);
+    Audio.startDrone();
+
     startEngine(canvas, {
         startRoom: 'bedroom',
         onRoomChange: (room) => {
             hudRoom.textContent = `KONUM: ${room.name.toUpperCase()}`;
+            // Mutfakta pencere yakın — yağmur sesi güçlenir
+            Audio.setRainIntensity(room.id === 'kitchen' ? 0.75 : 0.4);
         },
     });
 

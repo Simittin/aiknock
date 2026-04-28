@@ -9,6 +9,10 @@ import { openConversation, isDialogOpen, closeDialog } from '../ui/dialog.js';
 import { getSpeedMultiplier } from '../state/burden.js';
 import { isCompleted } from '../state/scores.js';
 import { isFinaleActive, startFinaleAttempt, tickFinale } from '../ui/finale.js';
+import * as Audio from '../audio/audio.js';
+
+const FOOTSTEP_DIST = 22; // px hareket başına bir adım sesi
+let stepAccum = 0;
 
 let currentRoomId = 'bedroom';
 let onRoomChange = null;
@@ -66,16 +70,33 @@ function update() {
         const len = Math.hypot(dx, dy);
         const vx = (dx / len) * speed;
         const vy = (dy / len) * speed;
+        const beforeX = player.x;
+        const beforeY = player.y;
         resolveMove(room.blocked, player, vx, vy);
-        if (checkDoor()) return;
+        // Adım sesi — gerçekten hareket ettiyse mesafeyi biriktir
+        const moved = Math.hypot(player.x - beforeX, player.y - beforeY);
+        stepAccum += moved;
+        if (stepAccum >= FOOTSTEP_DIST) {
+            Audio.playFootstep();
+            stepAccum = 0;
+        }
+        if (checkDoor()) {
+            Audio.playDoor();
+            stepAccum = 0;
+            return;
+        }
+    } else {
+        stepAccum = 0;
     }
 
     // Etkileşim
     nearby = findInteraction(rooms[currentRoomId], player);
     if (nearby && consumeKey('e')) {
         if (nearby.isFinale) {
+            Audio.playInteract();
             startFinaleAttempt(player, nearby);
         } else if (!isCompleted(nearby.id)) {
+            Audio.playInteract();
             openConversation({ objectId: nearby.id });
         }
     }
