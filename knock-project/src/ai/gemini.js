@@ -4,7 +4,7 @@
 
 import { getApiKey } from './env-loader.js';
 
-const MODEL = 'gemini-2.5-flash-lite';
+const MODEL = 'gemini-2.0-flash-lite';
 const ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
 
 const QA_SCHEMA = {

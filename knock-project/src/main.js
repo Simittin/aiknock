@@ -3,8 +3,8 @@ import { askPlayerName } from './ui/name-prompt.js';
 import { showIntro } from './ui/intro.js';
 import { getPlayerName } from './state/profile.js';
 import { clearPendingKeys } from './engine/input.js';
-import { onBurdenChange, getBurden, resetBurden } from './state/burden.js';
-import { onScoresChange, getCompletedCount, getTotalScore, resetScores } from './state/scores.js';
+import { onBurdenChange, getBurden, resetBurden, setBurden } from './state/burden.js';
+import { onScoresChange, getCompletedCount, getTotalScore, resetScores, markCompleted } from './state/scores.js';
 import { clearProfile } from './state/profile.js';
 import { getApiKey } from './ai/env-loader.js';
 
@@ -81,3 +81,14 @@ async function boot() {
 }
 
 boot();
+
+// --- DEV CHEAT (API'siz finale testi için) ---
+// Console'da: cheat.lightEnd()  veya  cheat.heavyEnd()
+// Sonra oturma odasının üst duvarındaki Cennetin Kapısı'na yürü, E'ye bas.
+const OBJECT_IDS = ['letter', 'toy', 'guitar', 'gun', 'badge', 'window', 'mom'];
+window.cheat = {
+    completeAll() { OBJECT_IDS.forEach((id) => markCompleted(id)); },
+    setBurden(v)  { setBurden(v); },
+    lightEnd()    { OBJECT_IDS.forEach((id) => markCompleted(id)); setBurden(20); console.log('OK — kapıya yürü, E ile aç. burden=20 (LIGHT)'); },
+    heavyEnd()    { OBJECT_IDS.forEach((id) => markCompleted(id)); setBurden(80); console.log('OK — kapıya yürü, E ile aç. burden=80 (HEAVY)'); },
+};
