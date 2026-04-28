@@ -1,5 +1,6 @@
 import { startEngine } from './engine/loop.js';
 import { askPlayerName } from './ui/name-prompt.js';
+import { showIntro } from './ui/intro.js';
 import { getPlayerName } from './state/profile.js';
 import { clearPendingKeys } from './engine/input.js';
 import { onBurdenChange, getBurden, resetBurden } from './state/burden.js';
@@ -10,6 +11,7 @@ import { getApiKey } from './ai/env-loader.js';
 const TOTAL_OBJECTS = 7;
 
 const canvas    = document.getElementById('game-canvas');
+const gameContainer = document.getElementById('game-container');
 const hudRoom   = document.getElementById('hud-room');
 const hudPlayer = document.getElementById('hud-player');
 const burdenScoreEl = document.getElementById('burden-score');
@@ -47,15 +49,26 @@ async function boot() {
     resetBurden();
     resetScores();
 
+    // Oyun motoru intro tamamlanana kadar gizli — sadece modal görünür
+    gameContainer.classList.add('pre-intro');
+
     onBurdenChange(paintBurden);
     paintBurden(getBurden());
     onScoresChange(paintProgress);
     paintProgress();
 
+    // 1. Önce yalnızca isim kutucuğu
     await askPlayerName();
     hudPlayer.textContent = `ASKER: ${getPlayerName().toUpperCase()}`;
     clearPendingKeys();
     checkApiKey();
+
+    // 2. Sonra yalnızca hikâye + kontroller
+    await showIntro(getPlayerName());
+    clearPendingKeys();
+
+    // 3. Şimdi oyun ekranı belirir
+    gameContainer.classList.remove('pre-intro');
 
     startEngine(canvas, {
         startRoom: 'bedroom',
