@@ -1,4 +1,4 @@
-import { TILE, COLS, ROWS, VIEW_W, VIEW_H, DISPLAY_W, DISPLAY_H, SPRITE_SIZE, PAL, WALL, DOOR_R, DOOR_L } from '../config.js';
+import { TILE, COLS, ROWS, VIEW_W, VIEW_H, DISPLAY_W, DISPLAY_H, SPRITE_SIZE, PAL, WALL, DOOR_R, DOOR_L, DOOR_OUT } from '../config.js';
 import { objects as OBJECT_DB } from '../objects/index.js';
 import { getSprites } from '../assets/sprites.js';
 import { isCompleted } from '../state/scores.js';
@@ -25,6 +25,8 @@ function drawTile(c, r, t) {
         ctx.drawImage(sprites.tiles.doorR, x, y);
     } else if (t === DOOR_L) {
         ctx.drawImage(sprites.tiles.doorL, x, y);
+    } else if (t === DOOR_OUT) {
+        ctx.drawImage(sprites.tiles.doorOut, x, y);
     } else {
         // Şahmerdan tarzı dama paterni — küçük varyasyonla yerel doğal görünüm
         const tile = ((c + r) & 1) ? sprites.tiles.floorA : sprites.tiles.floorB;
@@ -82,10 +84,15 @@ function drawPlayer(player) {
 }
 
 function drawHint(obj) {
-    const def = OBJECT_DB[obj.id];
-    if (!def) return;
-    const done = isCompleted(obj.id);
-    const text = done ? `[X] TAMAMLANDI` : `[E] ${def.name.toUpperCase()}`;
+    let text;
+    if (obj.isFinale) {
+        text = '[E] CENNETİN KAPISI';
+    } else {
+        const def = OBJECT_DB[obj.id];
+        if (!def) return;
+        const done = isCompleted(obj.id);
+        text = done ? `[X] TAMAMLANDI` : `[E] ${def.name.toUpperCase()}`;
+    }
     const objCx = obj.col * TILE + TILE / 2;
     const objTop = obj.row * TILE;
 

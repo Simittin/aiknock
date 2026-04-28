@@ -8,6 +8,7 @@ import { findInteraction } from './interaction.js';
 import { openConversation, isDialogOpen, closeDialog } from '../ui/dialog.js';
 import { getSpeedMultiplier } from '../state/burden.js';
 import { isCompleted } from '../state/scores.js';
+import { isFinaleActive, startFinaleAttempt, tickFinale } from '../ui/finale.js';
 
 let currentRoomId = 'bedroom';
 let onRoomChange = null;
@@ -42,9 +43,13 @@ function checkDoor() {
 }
 
 function update() {
+    // Finale aktifse: cutscene devraldı, oyuncu input/hareket yok.
+    if (isFinaleActive()) {
+        tickFinale();
+        return;
+    }
+
     // Diyalog açıkken motor donar — input modülü kendi Enter/Esc'ini yakalar.
-    // Burada sadece bir güvenlik kapısı: pencere-seviyesi Esc'i kapatma için
-    // tutuyoruz (input alanı odaklı değilse de çıkılabilsin).
     if (isDialogOpen()) {
         if (consumeKey('escape')) closeDialog();
         updateAnim(0, 0);
@@ -68,7 +73,9 @@ function update() {
     // Etkileşim
     nearby = findInteraction(rooms[currentRoomId], player);
     if (nearby && consumeKey('e')) {
-        if (!isCompleted(nearby.id)) {
+        if (nearby.isFinale) {
+            startFinaleAttempt(player, nearby);
+        } else if (!isCompleted(nearby.id)) {
             openConversation({ objectId: nearby.id });
         }
     }

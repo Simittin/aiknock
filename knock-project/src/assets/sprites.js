@@ -399,6 +399,29 @@ function drawDoor(g, leftSide) {
     g.fillRect(knobX, 9, 1, 1);
 }
 
+function drawHeavenDoor(g) {
+    // Cennetin Kapısı — pirinç çerçeveli, ışıltılı, üst duvar ortasında
+    g.fillStyle = PAL.brass;
+    g.fillRect(0, 0, TILE, TILE);
+    g.fillStyle = PAL.doorWood;
+    g.fillRect(2, 2, TILE - 4, TILE - 4);
+    // Pirinç süsler — köşe perçinleri
+    g.fillStyle = PAL.brass;
+    g.fillRect(3, 3, 1, 1);
+    g.fillRect(TILE - 4, 3, 1, 1);
+    g.fillRect(3, TILE - 4, 1, 1);
+    g.fillRect(TILE - 4, TILE - 4, 1, 1);
+    // Orta dikey haç çizgisi
+    g.fillStyle = PAL.brassDim;
+    g.fillRect(TILE / 2 - 1, 2, 1, TILE - 4);
+    g.fillRect(2, TILE / 2 - 1, TILE - 4, 1);
+    // Hale — üst kenar boyunca parıltı
+    g.fillStyle = '#f8d878';
+    g.fillRect(0, 0, TILE, 1);
+    g.fillRect(0, 0, 1, TILE);
+    g.fillRect(TILE - 1, 0, 1, TILE);
+}
+
 function buildTileSprites() {
     const out = {};
     const wall = makeCanvas(TILE, TILE);
@@ -420,6 +443,10 @@ function buildTileSprites() {
     const doorL = makeCanvas(TILE, TILE);
     drawDoor(doorL.getContext('2d'), true);
     out.doorL = doorL;
+
+    const doorOut = makeCanvas(TILE, TILE);
+    drawHeavenDoor(doorOut.getContext('2d'));
+    out.doorOut = doorOut;
 
     return out;
 }

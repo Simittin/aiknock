@@ -30,6 +30,15 @@
             <div id="api-warning" class="hidden">
                 ! GEMINI_API_KEY tanımlı değil — knock-project/.env içine GEMINI_API_KEY=... ekleyip yenile.
             </div>
+
+            <div id="finale-locked"></div>
+        </div>
+
+        <div id="ending-overlay">
+            <div id="ending-text">
+                <p id="ending-text-en"></p>
+                <p id="ending-text-tr"></p>
+            </div>
         </div>
 
         <div id="dialog-overlay" class="hidden">
@@ -59,6 +68,10 @@
         </div>
     </div>
 
+    <script>
+        // Her sayfa yenilemesinde sıfırlama — modül yüklenmeden önce çalışır
+        ['knock.playerName', 'knock.burdenScore', 'knock.scores'].forEach((k) => localStorage.removeItem(k));
+    </script>
     <script type="module" src="src/main.js"></script>
 </body>
 

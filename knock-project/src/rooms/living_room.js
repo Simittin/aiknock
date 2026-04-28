@@ -1,4 +1,4 @@
-import { COLS, ROWS, FLOOR, WALL, DOOR_L, DOOR_R } from '../config.js';
+import { COLS, ROWS, FLOOR, WALL, DOOR_L, DOOR_R, DOOR_OUT } from '../config.js';
 import { computeBlocked } from './_helpers.js';
 
 function build() {
@@ -16,6 +16,8 @@ function build() {
     t[6][0] = DOOR_L;
     // Mutfağa geçiş (sağ)
     t[6][COLS - 1] = DOOR_R;
+    // CENNETİN KAPISI — üst duvar ortası, finale tetikleyicisi
+    t[0][10] = DOOR_OUT;
     return t;
 }
 

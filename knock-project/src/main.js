@@ -2,8 +2,9 @@ import { startEngine } from './engine/loop.js';
 import { askPlayerName } from './ui/name-prompt.js';
 import { getPlayerName } from './state/profile.js';
 import { clearPendingKeys } from './engine/input.js';
-import { onBurdenChange, getBurden } from './state/burden.js';
-import { onScoresChange, getCompletedCount, getTotalScore } from './state/scores.js';
+import { onBurdenChange, getBurden, resetBurden } from './state/burden.js';
+import { onScoresChange, getCompletedCount, getTotalScore, resetScores } from './state/scores.js';
+import { clearProfile } from './state/profile.js';
 import { getApiKey } from './ai/env-loader.js';
 
 const TOTAL_OBJECTS = 7;
@@ -41,6 +42,11 @@ function paintProgress() {
 }
 
 async function boot() {
+    // Her sayfa yenilemesinde temiz başla — kalıcılık devre dışı
+    clearProfile();
+    resetBurden();
+    resetScores();
+
     onBurdenChange(paintBurden);
     paintBurden(getBurden());
     onScoresChange(paintProgress);

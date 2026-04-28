@@ -11,10 +11,11 @@ export const DISPLAY_W = VIEW_W * SCALE; // 640
 export const DISPLAY_H = VIEW_H * SCALE; // 384
 
 // Tile türleri
-export const FLOOR  = 0;
-export const WALL   = 1;
-export const DOOR_R = 2;
-export const DOOR_L = 3;
+export const FLOOR    = 0;
+export const WALL     = 1;
+export const DOOR_R   = 2;
+export const DOOR_L   = 3;
+export const DOOR_OUT = 4;  // Heaven's Door — finale tetikleyici
 
 // Oyuncu
 export const PLAYER_SIZE  = 12;   // çarpışma kutusu (sprite 14, 1px boşluk her yan)
