@@ -4,7 +4,7 @@
 // Şıklı turda: input gizlenir, 3 seçenek render olur, 1/2/3 ile seçilir.
 // Seçilen şık normal cevap gibi sentiment + AI puanlamasına gider (uniform).
 
-import { callGeminiQA } from '../ai/gemini.js';
+import { callGeminiQA } from '../ai/gemini.js?v=8';
 import { analyzeAndApply, ensureSentimentLoaded } from '../ai/sentiment.js';
 import { getBurden } from '../state/burden.js';
 import { getPlayerName } from '../state/profile.js';
