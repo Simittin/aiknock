@@ -1,4 +1,4 @@
-import { TILE, COLS, ROWS, VIEW_W, VIEW_H, DISPLAY_W, DISPLAY_H, SPRITE_SIZE, PAL, WALL, DOOR_R, DOOR_L, DOOR_OUT } from '../config.js';
+import { TILE, COLS, ROWS, VIEW_W, VIEW_H, DISPLAY_W, DISPLAY_H, SPRITE_SIZE, PAL, FLOOR, WALL, DOOR_R, DOOR_L, DOOR_OUT } from '../config.js';
 import { objects as OBJECT_DB } from '../objects/index.js';
 import { getSprites } from '../assets/sprites.js';
 import { isCompleted } from '../state/scores.js';
@@ -32,30 +32,489 @@ export function initRenderer(canvas) {
     initDust();
 }
 
-function drawTile(c, r, t) {
-    const x = c * TILE;
-    const y = r * TILE;
-    if (t === WALL) {
-        ctx.drawImage(sprites.tiles.wall, x, y);
-    } else if (t === DOOR_R) {
-        ctx.drawImage(sprites.tiles.doorR, x, y);
-    } else if (t === DOOR_L) {
-        ctx.drawImage(sprites.tiles.doorL, x, y);
-    } else if (t === DOOR_OUT) {
-        ctx.drawImage(sprites.tiles.doorOut, x, y);
+let currentSeed = 1;
+function setSeed(s) { currentSeed = s; }
+function rand() {
+    currentSeed = (currentSeed * 16807) % 2147483647;
+    return (currentSeed - 1) / 2147483646;
+}
+
+function drawFloor(room) {
+    setSeed(room.id === 'bedroom' ? 123 : (room.id === 'kitchen' ? 456 : 789));
+    
+    if (room.id === 'kitchen') {
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                ctx.fillStyle = ((c + r) & 1) ? '#8a9a9a' : '#6a7a7a';
+                ctx.fillRect(c * TILE, r * TILE, TILE, TILE);
+            }
+        }
+        ctx.save();
+        const grad = ctx.createRadialGradient(VIEW_W/2, VIEW_H/2, VIEW_W*0.2, VIEW_W/2, VIEW_H/2, VIEW_W*0.8);
+        grad.addColorStop(0, 'rgba(0,0,0,0)');
+        grad.addColorStop(1, 'rgba(0,0,0,0.5)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, VIEW_W, VIEW_H);
+        ctx.restore();
     } else {
-        // Şahmerdan tarzı dama paterni — küçük varyasyonla yerel doğal görünüm
-        const tile = ((c + r) & 1) ? sprites.tiles.floorA : sprites.tiles.floorB;
-        ctx.drawImage(tile, x, y);
+        ctx.fillStyle = PAL.floorA;
+        ctx.fillRect(0, 0, VIEW_W, VIEW_H);
+        
+        ctx.save();
+        const plankH = 8;
+        for (let y = 0; y < VIEW_H; y += plankH) {
+            let x = ((y / plankH) % 2 === 0) ? 0 : -20;
+            while (x < VIEW_W) {
+                const w = 20 + rand() * 30;
+                const shade = rand() > 0.5 ? PAL.floorA : PAL.floorB;
+                ctx.fillStyle = shade;
+                ctx.fillRect(x, y, w, plankH);
+                
+                ctx.strokeStyle = PAL.wallGrain;
+                ctx.lineWidth = 0.5;
+                ctx.beginPath();
+                ctx.moveTo(x + 2, y + 2 + rand()*4);
+                ctx.quadraticCurveTo(x + w/2, y + rand()*plankH, x + w - 2, y + 2 + rand()*4);
+                ctx.stroke();
+
+                ctx.fillStyle = '#0a0708';
+                ctx.fillRect(x + 2, y + 2, 1, 1);
+                ctx.fillRect(x + w - 3, y + plankH - 3, 1, 1);
+                
+                ctx.strokeStyle = PAL.floorLine;
+                ctx.lineWidth = 1;
+                ctx.strokeRect(x, y, w, plankH);
+                
+                x += w;
+            }
+        }
+        
+        ctx.strokeStyle = 'rgba(200, 180, 150, 0.15)';
+        ctx.lineWidth = 0.5;
+        for (let i = 0; i < 40; i++) {
+            const sx = rand() * VIEW_W;
+            const sy = rand() * VIEW_H;
+            const len = 2 + rand() * 6;
+            const angle = rand() * Math.PI;
+            ctx.beginPath();
+            ctx.moveTo(sx, sy);
+            ctx.lineTo(sx + Math.cos(angle)*len, sy + Math.sin(angle)*len);
+            ctx.stroke();
+        }
+        ctx.restore();
+    }
+    
+    ctx.save();
+    const cornerGrad = ctx.createRadialGradient(VIEW_W/2, VIEW_H/2, VIEW_W*0.4, VIEW_W/2, VIEW_H/2, VIEW_W*0.7);
+    cornerGrad.addColorStop(0, 'rgba(0,0,0,0)');
+    cornerGrad.addColorStop(1, 'rgba(20, 10, 5, 0.6)');
+    ctx.fillStyle = cornerGrad;
+    ctx.fillRect(0, 0, VIEW_W, VIEW_H);
+    ctx.restore();
+}
+
+function drawRoomEnhancements(room) {
+    ctx.save();
+    const time = Date.now();
+    if (room.id === 'bedroom') {
+        const grad = ctx.createLinearGradient(11 * TILE, TILE, 13 * TILE, 8 * TILE);
+        grad.addColorStop(0, 'rgba(200, 220, 255, 0.15)');
+        grad.addColorStop(1, 'rgba(200, 220, 255, 0)');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.moveTo(10 * TILE, TILE);
+        ctx.lineTo(13 * TILE, TILE);
+        ctx.lineTo(15 * TILE, 8 * TILE);
+        ctx.lineTo(11 * TILE, 8 * TILE);
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.moveTo(10 * TILE, TILE);
+        ctx.lineTo(13 * TILE, TILE);
+        ctx.lineTo(15 * TILE, 8 * TILE);
+        ctx.lineTo(11 * TILE, 8 * TILE);
+        ctx.clip();
+        
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+        for (let i = 0; i < 20; i++) {
+            const dx = (10 * TILE) + ((time * 0.005 + i * 13) % (5 * TILE));
+            const dy = TILE + ((time * 0.01 + i * 7) % (7 * TILE));
+            ctx.fillRect(dx, dy, 1, 1);
+        }
+    } else if (room.id === 'living_room') {
+        const fx = 5 * TILE + 24;
+        const fy = TILE * 2;
+        const pulse = Math.sin(time / 200) * 5;
+        const grad = ctx.createRadialGradient(fx, fy, 10 + pulse, fx, fy, 80 + pulse * 2);
+        grad.addColorStop(0, 'rgba(255, 80, 0, 0.2)');
+        grad.addColorStop(1, 'rgba(255, 80, 0, 0)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, VIEW_W, VIEW_H);
+    } else if (room.id === 'kitchen') {
+        const wx = 10 * TILE;
+        const wy = 0 * TILE;
+        ctx.beginPath();
+        ctx.rect(wx, wy, TILE, TILE);
+        ctx.clip();
+        
+        ctx.strokeStyle = 'rgba(200, 220, 255, 0.4)';
+        ctx.lineWidth = 0.5;
+        for (let i = 0; i < 6; i++) {
+            const rx = wx + ((time * 0.1 + i * 5) % TILE);
+            const ry = wy + ((time * 0.2 + i * 7) % TILE);
+            ctx.beginPath();
+            ctx.moveTo(rx, ry);
+            ctx.lineTo(rx - 2, ry + 4);
+            ctx.stroke();
+        }
+    }
+    ctx.restore();
+}
+
+function drawBaseboards(tiles) {
+    ctx.save();
+    ctx.fillStyle = PAL.wallBot;
+    for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+            if (tiles[r][c] === WALL) {
+                if (r < ROWS - 1 && tiles[r+1][c] === FLOOR) {
+                    ctx.fillRect(c * TILE, r * TILE + TILE - 2, TILE, 2);
+                }
+            }
+        }
+    }
+    ctx.restore();
+}
+
+function drawRoomTiles(tiles) {
+    for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+            const t = tiles[r][c];
+            if (t === WALL) {
+                ctx.drawImage(sprites.tiles.wall, c * TILE, r * TILE);
+            } else if (t === DOOR_R) {
+                ctx.drawImage(sprites.tiles.doorR, c * TILE, r * TILE);
+            } else if (t === DOOR_L) {
+                ctx.drawImage(sprites.tiles.doorL, c * TILE, r * TILE);
+            } else if (t === DOOR_OUT) {
+                ctx.drawImage(sprites.tiles.doorOut, c * TILE, r * TILE);
+            }
+        }
     }
 }
 
-function drawRoom(tiles) {
-    for (let r = 0; r < ROWS; r++) {
-        for (let c = 0; c < COLS; c++) {
-            drawTile(c, r, tiles[r][c]);
-        }
+function drawWallDecor(room) {
+    ctx.save();
+    if (room.id === 'living_room') {
+        drawPainting(6 * TILE, 0 * TILE + 2, 24, 12);
+        drawPainting(16 * TILE, 0 * TILE + 2, 16, 12);
+    } else if (room.id === 'bedroom') {
+        drawPainting(12 * TILE, 0 * TILE + 2, 20, 12);
     }
+    ctx.restore();
+}
+
+function drawPainting(x, y, w, h) {
+    ctx.fillStyle = '#2a1808';
+    ctx.fillRect(x, y, w, h);
+    ctx.fillStyle = '#e8d8a8';
+    ctx.fillRect(x + 2, y + 2, w - 4, h - 4);
+    ctx.fillStyle = '#7a1a0a';
+    ctx.fillRect(x + 4, y + 4, w/2, h/2);
+    ctx.fillStyle = '#3a4868';
+    ctx.fillRect(x + w/2 + 1, y + 6, w/3, h/3);
+}
+
+function drawNotes(x, y) {
+    ctx.shadowColor = 'transparent';
+    for (let i=0; i<3; i++) {
+        ctx.save();
+        ctx.translate(x + rand()*8, y + rand()*8);
+        ctx.rotate((rand() - 0.5));
+        ctx.fillStyle = '#e0e0e0';
+        ctx.fillRect(-3, -4, 6, 8);
+        ctx.fillStyle = '#808080';
+        ctx.fillRect(-2, -2, 4, 1);
+        ctx.fillRect(-2, 0, 4, 1);
+        ctx.fillRect(-2, 2, 4, 1);
+        ctx.restore();
+    }
+}
+
+function drawMug(x, y) {
+    ctx.shadowColor = 'transparent';
+    ctx.fillStyle = '#f0f0f0';
+    ctx.beginPath();
+    ctx.arc(x, y, 3, 0, Math.PI*2);
+    ctx.fill();
+    ctx.fillStyle = '#201000';
+    ctx.beginPath();
+    ctx.arc(x, y, 2, 0, Math.PI*2);
+    ctx.fill();
+}
+
+function drawRug(x, y, w, h) {
+    ctx.fillStyle = PAL.shawl;
+    ctx.fillRect(x, y, w, h);
+    
+    ctx.save();
+    ctx.globalCompositeOperation = 'multiply';
+    const grad = ctx.createRadialGradient(x + w/2, y + h/2, 2, x + w/2, y + h/2, Math.min(w, h)/2);
+    grad.addColorStop(0, 'rgba(0,0,0,0.3)');
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(x, y, w, h);
+    ctx.restore();
+    
+    ctx.strokeStyle = PAL.paper;
+    ctx.lineWidth = 2;
+    ctx.setLineDash([2, 2]);
+    ctx.beginPath();
+    ctx.moveTo(x, y); ctx.lineTo(x + w, y);
+    ctx.moveTo(x, y + h); ctx.lineTo(x + w, y + h);
+    ctx.stroke();
+    ctx.setLineDash([]);
+}
+
+function drawBed(x, y, w, h) {
+    ctx.fillStyle = PAL.walnut;
+    ctx.fillRect(x, y, w, h);
+    ctx.fillStyle = PAL.paper;
+    ctx.fillRect(x + 2, y + 2, w - 4, h - 4);
+    
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(x + 2, y + 2, w - 4, h - 4);
+    ctx.clip();
+    
+    ctx.fillStyle = PAL.denim;
+    ctx.fillRect(x + 2, y + h/2, w - 4, h/2 - 2);
+    
+    ctx.translate(x + w/2, y + h/2);
+    ctx.rotate(0.2);
+    ctx.fillStyle = '#4a5878';
+    ctx.fillRect(-w/2, -h/4, w, h/2);
+    ctx.rotate(-0.4);
+    ctx.fillStyle = PAL.shawl;
+    ctx.fillRect(-w/3, 0, w/2, h/2);
+    ctx.restore();
+    
+    ctx.fillStyle = '#fff';
+    ctx.save();
+    ctx.translate(x + 6, y + 5);
+    ctx.rotate(0.05);
+    ctx.fillRect(0, 0, w - 12, h/4);
+    ctx.restore();
+}
+
+function drawNightstand(x, y, w, h) {
+    ctx.fillStyle = PAL.walnut;
+    ctx.fillRect(x, y, w, h);
+    ctx.strokeStyle = PAL.wallBot;
+    ctx.strokeRect(x + 2, y + 2, w - 4, h - 4);
+}
+
+function drawWardrobe(x, y, w, h) {
+    ctx.fillStyle = PAL.cherry;
+    ctx.fillRect(x, y, w, h);
+    ctx.strokeStyle = '#000';
+    ctx.strokeRect(x + 2, y + 2, w/2 - 2, h - 4);
+    ctx.strokeRect(x + w/2, y + 2, w/2 - 2, h - 4);
+}
+
+function drawCounter(x, y, w, h) {
+    ctx.fillStyle = '#d0d0d0';
+    ctx.fillRect(x, y, w, h);
+    
+    // Stove
+    ctx.fillStyle = '#333';
+    ctx.fillRect(x + 4, y + 2, 14, h - 4);
+    ctx.fillStyle = '#111';
+    ctx.beginPath(); ctx.arc(x + 8, y + 6, 2, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(x + 14, y + 6, 2, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(x + 8, y + 10, 2, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(x + 14, y + 10, 2, 0, Math.PI*2); ctx.fill();
+    
+    // Sink
+    ctx.fillStyle = '#a0a0a0';
+    ctx.fillRect(x + 24, y + 2, 12, h - 4);
+    ctx.fillStyle = '#808080';
+    ctx.fillRect(x + 25, y + 3, 10, h - 6);
+    ctx.fillStyle = '#ccc';
+    ctx.fillRect(x + 29, y, 2, 4); // Faucet
+    
+    // Cutting board
+    ctx.fillStyle = PAL.wallTop;
+    ctx.fillRect(x + 42, y + 2, 10, h - 4);
+    
+    // Unwashed dishes inside sink
+    ctx.fillStyle = '#eee';
+    ctx.beginPath(); ctx.arc(x + 30, y + h/2, 3, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(x + 28, y + h/2 - 2, 2.5, 0, Math.PI*2); ctx.fill();
+}
+
+function drawFridge(x, y, w, h) {
+    ctx.fillStyle = '#f0f0f0';
+    ctx.fillRect(x, y, w, h);
+    ctx.fillStyle = '#c0c0c0';
+    ctx.fillRect(x + 2, y + 2, w - 4, h/2 - 2);
+    ctx.fillRect(x + 2, y + h/2 + 1, w - 4, h/2 - 3);
+}
+
+function drawTable(x, y, w, h) {
+    // Chairs underneath
+    ctx.fillStyle = PAL.wallBot; // Backrest
+    ctx.fillRect(x + w/2 - 6, y - 6, 12, 4); // Top chair
+    ctx.fillRect(x + w/2 - 6, y + h + 2, 12, 4); // Bottom chair
+    ctx.fillRect(x + w + 2, y + h/2 - 6, 4, 12); // Right chair
+    
+    ctx.fillStyle = PAL.wallMid; // Seat
+    ctx.fillRect(x + w/2 - 6, y - 2, 12, 6); // Top seat
+    ctx.fillRect(x + w/2 - 6, y + h - 4, 12, 6); // Bottom seat
+    ctx.fillRect(x + w - 4, y + h/2 - 6, 6, 12); // Right seat
+
+    // Table top
+    ctx.fillStyle = PAL.wallTop;
+    ctx.fillRect(x, y, w, h);
+    
+    // Clutter
+    drawNotes(x + 4, y + 4);
+    drawMug(x + w - 10, y + 10);
+}
+
+function drawAshtray(x, y) {
+    ctx.shadowColor = 'transparent';
+    ctx.fillStyle = '#222';
+    ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#555';
+    ctx.beginPath(); ctx.arc(x, y, 2, 0, Math.PI*2); ctx.fill();
+    
+    const time = Date.now();
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+    ctx.lineWidth = 0.5;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.quadraticCurveTo(x + Math.sin(time/300)*2, y - 4, x + Math.sin(time/400)*3, y - 8);
+    ctx.stroke();
+}
+
+function drawCoffeeTable(x, y, w, h) {
+    ctx.fillStyle = PAL.cherry;
+    ctx.fillRect(x, y, w, h);
+    drawNotes(x + 2, y + 2);
+    drawAshtray(x + 10, y + 6);
+}
+
+function drawCouch(x, y, w, h) {
+    ctx.fillStyle = PAL.plush;
+    ctx.fillRect(x, y, w, h);
+    ctx.strokeStyle = PAL.wallBot;
+    for (let i = 0; i < w/TILE; i++) {
+        ctx.strokeRect(x + i*TILE + 2, y + 2, TILE - 4, h - 4);
+    }
+}
+
+function drawBookshelf(x, y, w, h) {
+    ctx.fillStyle = PAL.walnut;
+    ctx.fillRect(x, y, w, h);
+    ctx.shadowColor = 'transparent';
+    const colors = ['#5a1a1a', '#1a2a5a', '#1a4a2a', '#a08050'];
+    let bx = x + 2;
+    while (bx < x + w - 4) {
+        const bw = 2 + rand() * 3;
+        const bh = 8 + rand() * 6;
+        ctx.fillStyle = colors[Math.floor(rand() * colors.length)];
+        const tilt = rand() > 0.8 ? (rand() - 0.5) * 0.4 : 0;
+        ctx.save();
+        ctx.translate(bx, y + h - 2);
+        ctx.rotate(tilt);
+        ctx.fillRect(0, -bh, bw, bh);
+        ctx.restore();
+        bx += bw + 1;
+    }
+}
+
+function drawFireplace(x, y, w, h) {
+    ctx.fillStyle = '#404040';
+    ctx.fillRect(x, y, w, h);
+    ctx.fillStyle = '#000';
+    ctx.fillRect(x + w/4, y + 4, w/2, h - 4);
+    
+    ctx.fillStyle = '#ff8800';
+    for(let i=0; i<5; i++) {
+        ctx.fillRect(x + w/4 + 2 + rand()*(w/2 - 4), y + h - 2 - rand()*3, 1 + rand()*2, 1 + rand()*2);
+    }
+}
+
+function drawFurniture(furniture) {
+    if (!furniture) return;
+    for (const f of furniture) {
+        setSeed(f.col * 1000 + f.row);
+        ctx.save();
+        const px = f.col * TILE;
+        const py = f.row * TILE;
+        const pw = f.w * TILE;
+        const ph = f.h * TILE;
+        
+        if (f.type !== 'rug') {
+            ctx.shadowColor = 'rgba(0,0,0,0.5)';
+            ctx.shadowBlur = 5;
+            ctx.shadowOffsetX = 2;
+            ctx.shadowOffsetY = 2;
+        }
+        
+        switch (f.type) {
+            case 'bed': drawBed(px, py, pw, ph); break;
+            case 'nightstand': drawNightstand(px, py, pw, ph); break;
+            case 'wardrobe': drawWardrobe(px, py, pw, ph); break;
+            case 'rug': drawRug(px, py, pw, ph); break;
+            case 'counter': drawCounter(px, py, pw, ph); break;
+            case 'fridge': drawFridge(px, py, pw, ph); break;
+            case 'table': drawTable(px, py, pw, ph); break;
+            case 'coffee_table': drawCoffeeTable(px, py, pw, ph); break;
+            case 'couch': drawCouch(px, py, pw, ph); break;
+            case 'bookshelf': drawBookshelf(px, py, pw, ph); break;
+            case 'fireplace': drawFireplace(px, py, pw, ph); break;
+        }
+        ctx.restore();
+    }
+}
+
+function drawFloorClutter(room) {
+    ctx.save();
+    if (room.id === 'bedroom') {
+        setSeed(1001);
+        const cx = 5 * TILE;
+        const cy = 4 * TILE;
+        for (let i = 0; i < 4; i++) {
+            ctx.save();
+            ctx.translate(cx + rand()*20, cy + rand()*20);
+            ctx.rotate(rand() * Math.PI);
+            ctx.fillStyle = 'rgba(240, 240, 240, 0.7)';
+            ctx.fillRect(-3, -3, 6, 6);
+            ctx.restore();
+        }
+    } else if (room.id === 'kitchen') {
+        const sx = 6 * TILE;
+        const sy = 4 * TILE;
+        ctx.fillStyle = 'rgba(60, 30, 15, 0.6)';
+        ctx.beginPath();
+        ctx.moveTo(sx, sy);
+        ctx.quadraticCurveTo(sx + 10, sy - 5, sx + 20, sy + 5);
+        ctx.quadraticCurveTo(sx + 25, sy + 20, sx + 15, sy + 25);
+        ctx.quadraticCurveTo(sx - 5, sy + 15, sx, sy);
+        ctx.fill();
+    }
+    ctx.restore();
+}
+
+function drawRoom(room) {
+    drawFloor(room);
+    drawBaseboards(room.tiles);
+    drawRoomTiles(room.tiles);
+    drawWallDecor(room);
+    drawFloorClutter(room);
+    drawFurniture(room.furniture);
 }
 
 function drawObjects(objs) {
@@ -183,8 +642,9 @@ function drawDust() {
 export function render(room, player, nearby) {
     ctx.fillStyle = PAL.bg;
     ctx.fillRect(0, 0, VIEW_W, VIEW_H);
-    drawRoom(room.tiles);
+    drawRoom(room);
     drawObjects(room.objects);
+    drawRoomEnhancements(room);
     drawPlayer(player);
     drawDust();
     drawVignette();

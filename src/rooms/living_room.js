@@ -5,13 +5,6 @@ function build() {
     const t = Array.from({ length: ROWS }, () => Array(COLS).fill(FLOOR));
     for (let c = 0; c < COLS; c++) { t[0][c] = WALL; t[ROWS - 1][c] = WALL; }
     for (let r = 0; r < ROWS; r++) { t[r][0] = WALL; t[r][COLS - 1] = WALL; }
-    // Sehpa (orta)
-    t[5][9] = WALL; t[5][10] = WALL;
-    t[6][9] = WALL; t[6][10] = WALL;
-    // Koltuk (alt sol)
-    t[9][3] = WALL; t[9][4] = WALL; t[9][5] = WALL; t[9][6] = WALL;
-    // Kitaplık (alt sağ)
-    t[9][13] = WALL; t[9][14] = WALL; t[9][15] = WALL; t[9][16] = WALL;
     // Yatak odasına dönüş (sol)
     t[6][0] = DOOR_L;
     // Mutfağa geçiş (sağ)
@@ -22,6 +15,14 @@ function build() {
 }
 
 const tiles = build();
+
+const furniture = [
+    { type: 'rug', col: 7, row: 4, w: 6, h: 4, blocking: false },
+    { type: 'coffee_table', col: 9, row: 5, w: 2, h: 2 },
+    { type: 'couch', col: 3, row: 9, w: 4, h: 1 },
+    { type: 'bookshelf', col: 13, row: 9, w: 4, h: 1 },
+    { type: 'fireplace', col: 5, row: 1, w: 3, h: 1 }
+];
 
 // Faz 2'de "dış kapı" finali henüz yok; eklendiğinde buradan çıkılacak.
 const objects = [
@@ -38,6 +39,7 @@ export const livingRoom = {
     name: 'Oturma Odası',
     tiles,
     objects,
+    furniture,
     spawn: { col: 10, row: 6 },
-    blocked: computeBlocked(tiles, objects),
+    blocked: computeBlocked(tiles, objects, furniture),
 };
