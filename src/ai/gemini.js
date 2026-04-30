@@ -1,4 +1,4 @@
-// Gemini 1.5 Flash istemcisi — sistem promptu + diyalog geçmişi alır,
+// Gemini 2.0 Flash Lite istemcisi — sistem promptu + diyalog geçmişi alır,
 // kısa şiirsel cevap döner. Hata zarafeti içerir (ağ kopması durumunda
 // üstte bir uyarı satırı bırakır, oyun çökmez).
 
@@ -32,7 +32,7 @@ const QA_SCHEMA = {
 export async function callGeminiQA({ systemPrompt, history, userText }) {
     const key = await getApiKey();
     if (!key || key === 'YOUR_API_KEY_HERE') {
-        throw new Error('GEMINI_API_KEY tanımlı değil. knock-project/.env dosyasını kontrol et.');
+        throw new Error('VITE_GEMINI_API_KEY tanımlı değil. .env dosyasını kontrol et.');
     }
 
     const contents = [];
