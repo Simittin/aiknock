@@ -59,7 +59,7 @@ export function startRain(intensity = 0.4) {
     bp.Q.value = 0.5;
 
     const gain = ctx.createGain();
-    gain.gain.value = intensity * 0.18;
+    gain.gain.value = intensity * 0.07;
 
     // LFO — yağmurun şiddet dalgalanması
     const lfo = ctx.createOscillator();
@@ -79,7 +79,7 @@ export function setRainIntensity(intensity) {
     if (!nodes.rain || !ctx) return;
     nodes.rain.baseIntensity = intensity;
     nodes.rain.gain.gain.linearRampToValueAtTime(
-        intensity * 0.18,
+        intensity * 0.07,
         ctx.currentTime + 0.6
     );
 }
