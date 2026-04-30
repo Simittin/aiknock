@@ -74,4 +74,14 @@ export const objects = {
         opener: "Annen masada oturuyor. Elleri dizinde, gözleri seninle.",
         context: "Final veda sahnesi. Anne henüz konuşmadı; oğlunu süzüyor."
     },
+    record_player: {
+        id: 'record_player',
+        name: 'Eski Pikap',
+        kind: 'record_player',
+        blocking: true,
+        role: 'inner_voice',
+        questionTarget: 3,
+        opener: "Pikabın iğnesi cızırtıyla iniyor. Bob Dylan'ın sesi odayı dolduruyor.",
+        context: "Pikabın üzerinde 1973 yapımı 'Knockin' on Heaven's Door' plağı dönüyor. Şarkının melankolisi, karakterin gitme zorunluluğuyla birleşiyor. Müzik ona kaçmak istediği her şeyi hatırlatıyor."
+    },
 };

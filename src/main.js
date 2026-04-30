@@ -10,7 +10,7 @@ import { getApiKey } from './ai/env-loader.js';
 import { onSentimentState } from './ai/sentiment.js';
 import * as Audio from './audio/audio.js';
 
-const TOTAL_OBJECTS = 7;
+const TOTAL_OBJECTS = 8;
 
 const canvas    = document.getElementById('game-canvas');
 const gameContainer = document.getElementById('game-container');
@@ -116,7 +116,7 @@ boot();
 // --- DEV CHEAT (API'siz finale testi için) ---
 // Console'da: cheat.lightEnd()  veya  cheat.heavyEnd()
 // Sonra oturma odasının üst duvarındaki Cennetin Kapısı'na yürü, E'ye bas.
-const OBJECT_IDS = ['letter', 'toy', 'guitar', 'gun', 'badge', 'window', 'mom'];
+const OBJECT_IDS = ['letter', 'toy', 'guitar', 'gun', 'badge', 'window', 'mom', 'record_player'];
 window.cheat = {
     completeAll() { OBJECT_IDS.forEach((id) => markCompleted(id)); },
     setBurden(v)  { setBurden(v); },
