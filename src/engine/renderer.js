@@ -2,9 +2,24 @@ import { TILE, COLS, ROWS, VIEW_W, VIEW_H, DISPLAY_W, DISPLAY_H, SPRITE_SIZE, PA
 import { objects as OBJECT_DB } from '../objects/index.js';
 import { getSprites } from '../assets/sprites.js';
 import { isCompleted } from '../state/scores.js';
+import { getBurden } from '../state/burden.js';
 
 let ctx = null;
 let sprites = null;
+let dust = [];
+
+function initDust() {
+    dust = [];
+    for (let i = 0; i < 15; i++) {
+        dust.push({
+            x: Math.random() * VIEW_W,
+            y: Math.random() * VIEW_H,
+            vx: (Math.random() - 0.5) * 0.1,
+            vy: -0.05 - Math.random() * 0.1,
+            life: Math.random() * Math.PI * 2
+        });
+    }
+}
 
 export function initRenderer(canvas) {
     canvas.width = VIEW_W;
@@ -14,6 +29,7 @@ export function initRenderer(canvas) {
     ctx = canvas.getContext('2d');
     ctx.imageSmoothingEnabled = false;
     sprites = getSprites();
+    initDust();
 }
 
 function drawTile(c, r, t) {
@@ -122,11 +138,49 @@ function drawHint(obj) {
     ctx.textBaseline = 'alphabetic';
 }
 
+function drawVignette() {
+    const score = getBurden();
+    if (score < 10) return; // Düşük yükte temiz ekran
+    
+    const alpha = (score / 100) * 0.6; // Max 0.6 opacity
+    const gradient = ctx.createRadialGradient(
+        VIEW_W / 2, VIEW_H / 2, VIEW_W * 0.2,
+        VIEW_W / 2, VIEW_H / 2, VIEW_W * 0.8
+    );
+    
+    // Yük arttıkça renk siyahtan kan kırmızısına kayar
+    const color = score > 70 ? 'rgba(40, 0, 0, ' : 'rgba(0, 0, 0, ';
+    gradient.addColorStop(0, 'rgba(0,0,0,0)');
+    gradient.addColorStop(1, color + alpha + ')');
+    
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, VIEW_W, VIEW_H);
+}
+
+function drawDust() {
+    ctx.fillStyle = PAL.paper;
+    const now = Date.now();
+    for (const p of dust) {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0) p.x = VIEW_W;
+        if (p.x > VIEW_W) p.x = 0;
+        if (p.y < 0) p.y = VIEW_H;
+        
+        const alpha = Math.sin(now * 0.001 + p.life) * 0.2 + 0.2;
+        ctx.globalAlpha = Math.max(0, alpha);
+        ctx.fillRect(Math.floor(p.x), Math.floor(p.y), 1, 1);
+    }
+    ctx.globalAlpha = 1.0;
+}
+
 export function render(room, player, nearby) {
     ctx.fillStyle = PAL.bg;
     ctx.fillRect(0, 0, VIEW_W, VIEW_H);
     drawRoom(room.tiles);
     drawObjects(room.objects);
     drawPlayer(player);
+    drawDust();
+    drawVignette();
     if (nearby) drawHint(nearby);
 }

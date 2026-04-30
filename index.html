@@ -28,7 +28,7 @@
             <canvas id="game-canvas" tabindex="0"></canvas>
 
             <div id="api-warning" class="hidden">
-                ! GEMINI_API_KEY tanımlı değil — knock-project/.env içine GEMINI_API_KEY=... ekleyip yenile.
+                ! VITE_GEMINI_API_KEY tanımlı değil — .env içine VITE_GEMINI_API_KEY=... ekleyip yenile.
             </div>
 
             <div id="finale-locked"></div>
@@ -189,6 +189,16 @@
                 </div>
                 <p id="name-error" class="name-error"></p>
                 <button id="name-submit">[ GİRİŞ ]</button>
+            </div>
+        </div>
+
+        <div id="model-loading-overlay">
+            <div class="loading-title">
+                <span>MODEL YÜKLENİYOR...</span>
+                <span id="model-progress-pct">0%</span>
+            </div>
+            <div id="model-progress-bar">
+                <div id="model-progress-fill"></div>
             </div>
         </div>
     </div>

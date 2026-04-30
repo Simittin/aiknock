@@ -321,6 +321,27 @@ function drawMom(g) {
     g.fillRect(2, 14, 12, 2);
 }
 
+function drawRecordPlayer(g) {
+    // Eski bir pikap — ceviz kasa
+    g.fillStyle = PAL.walnut;
+    g.fillRect(2, 6, 12, 8);
+    g.fillStyle = PAL.brassDim;
+    g.fillRect(2, 6, 12, 1);    // üst kenar
+    // Plak (siyah dairemsi)
+    g.fillStyle = PAL.bg;
+    g.fillRect(4, 7, 6, 6);
+    g.fillStyle = '#1a1a1a';
+    g.fillRect(5, 8, 4, 4);
+    // İğne kolu
+    g.fillStyle = PAL.steelHi;
+    g.fillRect(11, 7, 1, 5);
+    g.fillRect(9, 11, 2, 1);
+    // Düğmeler
+    g.fillStyle = PAL.brass;
+    g.fillRect(3, 11, 1, 1);
+    g.fillRect(5, 11, 1, 1);
+}
+
 function buildObjectSprites() {
     const map = {
         letter: drawLetter,
@@ -329,6 +350,7 @@ function buildObjectSprites() {
         gun:    drawGun,
         badge:  drawBadge,
         window: drawWindow,
+        record_player: drawRecordPlayer,
         npc:    drawMom,
     };
     const out = {};

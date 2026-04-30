@@ -27,16 +27,24 @@ export function isSentimentReady() { return loaded; }
 export async function ensureSentimentLoaded() {
     if (loaded) return analyzer;
     if (!loadingPromise) {
-        emit('loading');
-        loadingPromise = pipeline('sentiment-analysis', MODEL)
+        emit({ status: 'loading' });
+        
+        loadingPromise = pipeline('sentiment-analysis', MODEL, {
+            progress_callback: (data) => {
+                if (data.status === 'progress') {
+                    // data.progress 0-100 arasıdır
+                    emit({ status: 'progress', progress: data.progress });
+                }
+            }
+        })
             .then((p) => {
                 analyzer = p;
                 loaded = true;
-                emit('ready');
+                emit({ status: 'ready' });
                 return p;
             })
             .catch((err) => {
-                emit('error');
+                emit({ status: 'error', error: err.message });
                 loadingPromise = null;
                 throw err;
             });
