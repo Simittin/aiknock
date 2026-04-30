@@ -2,6 +2,7 @@ import { TILE, COLS, ROWS, VIEW_W, VIEW_H, DISPLAY_W, DISPLAY_H, SPRITE_SIZE, PA
 import { objects as OBJECT_DB } from '../objects/index.js';
 import { getSprites } from '../assets/sprites.js';
 import { isCompleted } from '../state/scores.js';
+import { getBurden } from '../state/burden.js';
 
 let ctx = null;
 let sprites = null;
@@ -137,6 +138,25 @@ function drawHint(obj) {
     ctx.textBaseline = 'alphabetic';
 }
 
+function drawVignette() {
+    const score = getBurden();
+    if (score < 10) return; // Düşük yükte temiz ekran
+    
+    const alpha = (score / 100) * 0.6; // Max 0.6 opacity
+    const gradient = ctx.createRadialGradient(
+        VIEW_W / 2, VIEW_H / 2, VIEW_W * 0.2,
+        VIEW_W / 2, VIEW_H / 2, VIEW_W * 0.8
+    );
+    
+    // Yük arttıkça renk siyahtan kan kırmızısına kayar
+    const color = score > 70 ? 'rgba(40, 0, 0, ' : 'rgba(0, 0, 0, ';
+    gradient.addColorStop(0, 'rgba(0,0,0,0)');
+    gradient.addColorStop(1, color + alpha + ')');
+    
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, VIEW_W, VIEW_H);
+}
+
 function drawDust() {
     ctx.fillStyle = PAL.paper;
     const now = Date.now();
@@ -161,5 +181,6 @@ export function render(room, player, nearby) {
     drawObjects(room.objects);
     drawPlayer(player);
     drawDust();
+    drawVignette();
     if (nearby) drawHint(nearby);
 }
