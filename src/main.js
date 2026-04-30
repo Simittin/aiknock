@@ -28,11 +28,15 @@ let lastBurdenSeen = 0;
 function paintBurden(score) {
     burdenScoreEl.textContent = String(score);
     burdenFillEl.style.width = `${score}%`;
-    // Yeşil -> kehribar -> kan kırmızı
-    const r = Math.round(90 + (220 - 90)  * (score / 100));
-    const g = Math.round(220 - (220 - 30) * (score / 100));
-    const b = Math.round(60  + (40  - 60) * (score / 100));
-    burdenFillEl.style.background = `rgb(${r}, ${g}, ${b})`;
+    
+    if (score <= 30) {
+        burdenFillEl.style.background = '#FFB000';
+    } else if (score <= 70) {
+        burdenFillEl.style.background = '#FF5722';
+    } else {
+        burdenFillEl.style.background = '#8B0000';
+    }
+    
     document.body.classList.toggle('high-burden', score >= 70);
     // Ses hook'ları: drone burden'a göre kararsızlaşır, ani sıçrama varsa kalp atışı
     Audio.setDroneBurden(score);
