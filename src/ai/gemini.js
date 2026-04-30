@@ -98,24 +98,29 @@ CRITICAL RULE: If the question requires a deep reflection (open-ended), set "cho
         if (firstBrace !== -1 && lastBrace !== -1) {
             cleanRaw = cleanRaw.substring(firstBrace, lastBrace + 1);
         }
+        
+        // 1. Dize (string) içindeki kaçışsız (unescaped) satır sonlarını düzelt (Gemini sıkça yapar)
+        cleanRaw = cleanRaw.replace(/"([^"\\]*(?:\\.[^"\\]*)*)"/g, (match) => {
+            return match.replace(/\n/g, '\\n').replace(/\r/g, '');
+        });
+        
+        // 2. Sondaki virgülleri temizle (Trailing commas)
+        cleanRaw = cleanRaw.replace(/,\s*([}\]])/g, '$1');
+
         parsed = JSON.parse(cleanRaw);
     } catch (e) {
-        // Tamamen çökmüş/bozuk bir metin gelirse (örneğin düz metin içine gömülü), Regex ile tek tek ayıklayacağız
+        // Eğer her şeye rağmen çökerse, en agresif şekilde Regex ile ayıklayalım
         let textFallback = raw;
         
-        // 1. "is_final" ayıklama
-        if (/is_final\s*:\s*true/i.test(textFallback)) parsed.is_final = true;
+        if (/["']?is_final["']?\s*:\s*true/i.test(textFallback)) parsed.is_final = true;
         
-        // 2. "score" ayıklama
-        let scoreMatch = textFallback.match(/score\s*:\s*(\d+)/i);
+        let scoreMatch = textFallback.match(/["']?score["']?\s*:\s*(\d+)/i);
         if (scoreMatch) parsed.score = parseInt(scoreMatch[1], 10);
         
-        // 3. "label" ayıklama
-        let labelMatch = textFallback.match(/label\s*:\s*["']?([^"'\s]+)["']?/i);
+        let labelMatch = textFallback.match(/["']?label["']?\s*:\s*["']([^"'\s]+)["']/i);
         if (labelMatch) parsed.label = labelMatch[1];
         
-        // 4. "choices" ayıklama (Kaba taslak)
-        let choicesMatch = textFallback.match(/choices\s*:\s*\[(.*?)\]/is);
+        let choicesMatch = textFallback.match(/["']?choices["']?\s*:\s*\[(.*?)\]/is);
         if (choicesMatch) {
             let choicesStr = choicesMatch[1];
             let choiceRegex = /["']?text["']?\s*:\s*["'](.*?)["'].*?["']?label["']?\s*:\s*["'](.*?)["']/gi;
@@ -127,17 +132,20 @@ CRITICAL RULE: If the question requires a deep reflection (open-ended), set "cho
             if (parsed.choices.length !== 3) parsed.choices = null;
         }
 
-        // 5. "reply" ayıklama
-        let replyMatch = textFallback.match(/["']?reply["']?\s*:\s*["'](.*?)(?:["']\s*(?:,|score|label|is_final|choices|}))/is);
+        // Reply kısmını yakalamak için daha güvenli bir yöntem
+        let replyMatch = textFallback.match(/["']?reply["']?\s*:\s*["']([\s\S]*?)(?:["']\s*,?\s*["']?(?:score|label|is_final|choices)["']?\s*:|["']\s*}\s*$)/is);
         if (replyMatch) {
             parsed.reply = replyMatch[1].replace(/\\n/g, '\n').replace(/\\"/g, '"');
         } else {
-            // Hiçbiri işe yaramazsa en azından saçma sapan anahtarları temizle ve kalan metni ver
+            // Hiçbiri çalışmazsa geriye kalan tüm JSON artıklarını sil
             let cleanReply = textFallback
-                .replace(/score\s*:\s*\d+/gi, '')
-                .replace(/label\s*:\s*["']?[^"'\s]+["']?/gi, '')
-                .replace(/is_final\s*:\s*(true|false)/gi, '')
-                .replace(/choices\s*:\s*\[.*?\]/gis, '')
+                .replace(/["']?score["']?\s*:\s*\d+\s*,?/gi, '')
+                .replace(/["']?label["']?\s*:\s*["']?[^"'\n,]+["']?\s*,?/gi, '')
+                .replace(/["']?is_final["']?\s*:\s*(true|false)\s*,?/gi, '')
+                .replace(/["']?choices["']?\s*:\s*(null|\[[\s\S]*?\])\s*,?/gi, '')
+                .replace(/["']?reply["']?\s*:\s*["']?\s*/gi, '')
+                .replace(/^```(?:json)?/gi, '')
+                .replace(/```$/gi, '')
                 .replace(/[{}"]/g, '')
                 .trim();
             parsed.reply = cleanReply;
@@ -154,8 +162,11 @@ CRITICAL RULE: If the question requires a deep reflection (open-ended), set "cho
             }));
         if (choices.length !== 3) choices = null;
     }
+    let finalReply = String(parsed.reply || '').trim();
+    finalReply = finalReply.replace(/\[\d+\/10[^\]]*\]/g, '').trim();
+
     return {
-        reply:    String(parsed.reply || '').trim(),
+        reply:    finalReply,
         score:    typeof parsed.score === 'number' ? parsed.score : null,
         label:    parsed.label ? String(parsed.label).trim() : null,
         is_final: !!parsed.is_final,

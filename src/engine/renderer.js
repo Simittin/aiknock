@@ -716,13 +716,13 @@ function drawHint(obj) {
     ctx.font = 'bold 8px "Courier New", monospace';
     const textW = ctx.measureText(text).width;
     const w = Math.ceil(textW) + 6;
-    const h = 11;
+    const h = 12;
     let x = Math.round(objCx - w / 2);
-    let y = objTop - h - 1;
-    if (y < 1) y = objTop + TILE + 1;
+    let y = objTop - h - 3;
+    if (y < 1) y = objTop + TILE + 3;
     x = Math.max(1, Math.min(VIEW_W - w - 1, x));
 
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.92)';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
     ctx.fillRect(x, y, w, h);
     ctx.fillStyle = PAL.brass;
     // Kenarlık
