@@ -28,6 +28,9 @@ const objects = [
     { id: 'gun',           col: 10, row: 2 },  // üst duvara yaslı, asılı silah
     { id: 'badge',         col: 11, row: 5 },  // sehpanın yanında parıldıyor
     { id: 'record_player', col: 14, row: 8 },  // kitaplığın yanında
+    // Lore Easter egg'leri
+    { id: 'faded_photo',   col: 4,  row: 2 },  // üst duvarda solmuş fotoğraf
+    { id: 'dusty_boots',   col: 16, row: 8 },  // kitaplığın yanında çizmeler
 ];
 
 export const livingRoom = {

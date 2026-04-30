@@ -84,4 +84,49 @@ export const objects = {
         opener: "Pikabın iğnesi cızırtıyla iniyor. Bob Dylan'ın sesi odayı dolduruyor.",
         context: "Pikabın üzerinde 1973 yapımı 'Knockin' on Heaven's Door' plağı dönüyor. Şarkının melankolisi, karakterin gitme zorunluluğuyla birleşiyor. Müzik ona kaçmak istediği her şeyi hatırlatıyor."
     },
+
+    // ─── STATİK LORE NESNELERİ (Easter Egg) ─────────────────────────
+    // AI çağırmaz, burden değiştirmez, sadece sabit Türkçe metin gösterir.
+    // Pat Garrett & Billy the Kid (1973) referansları.
+
+    movie_ticket: {
+        id: 'movie_ticket',
+        name: 'Sinema Bileti',
+        kind: 'movie_ticket',
+        blocking: true,
+        lore: true,
+        loreText: "Masada 1973 yazından kalma yıpranmış bir sinema bileti duruyor: 'Pat Garrett & Billy the Kid'. İki eski dostun birbirine silah çektiği, kanun ve özgürlüğün çarpıştığı o hikaye... Bugün nedense bana çok tanıdık geliyor."
+    },
+    lore_record: {
+        id: 'lore_record',
+        name: 'Plak Çalar',
+        kind: 'lore_record',
+        blocking: true,
+        lore: true,
+        loreText: "Pikabın iğnesi çoktan susmuş bir plağın üzerinde duruyor. Çiziklerin arasında kalan o akustik gitar tınısı, tozlu yollarda yankılanan eski bir batı ağıdını andırıyor."
+    },
+    faded_photo: {
+        id: 'faded_photo',
+        name: 'Solmuş Fotoğraf',
+        kind: 'faded_photo',
+        blocking: true,
+        lore: true,
+        loreText: "Duvarda iki adamın solmuş bir fotoğrafı var. Biri göğsünde parlak bir teneke taşıyor, diğeri ise sadece kendi kurallarına inanıyor. İkisi de günün birinde aynı kapıyı çalacaklarını o günlerde bilmiyorlardı."
+    },
+    dusty_boots: {
+        id: 'dusty_boots',
+        name: 'Tozlu Çizmeler',
+        kind: 'dusty_boots',
+        blocking: true,
+        lore: true,
+        loreText: "Köşede duran eski, yıpranmış deri çizmeler... Tıpkı nehir kenarında göğsünden vurulup son nefesini veren o yorgun şerifin giydiklerine benziyor. Yürünecek ne kadar yol kaldı ki?"
+    },
+    old_radio: {
+        id: 'old_radio',
+        name: 'Eski Radyo',
+        kind: 'old_radio',
+        blocking: true,
+        lore: true,
+        loreText: "Radyodan boğuk bir cızırtı yükseliyor. Spiker uzaklardaki, ormanların içindeki o anlamsız savaşın bilançosunu okuyor. Anlaşılan o ki, silahlar sadece eski vahşi batıda patlamıyor."
+    },
 };

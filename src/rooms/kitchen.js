@@ -22,6 +22,8 @@ const tiles = build();
 const objects = [
     { id: 'window', col: 10, row: 2 },   // üst duvara yaslı, fırtına dışarıda
     { id: 'mom',    col: 13, row: 6 },   // masanın yanında, oyuncuyu bekliyor
+    // Lore Easter egg
+    { id: 'old_radio', col: 15, row: 4 }, // buzdolabının yanında eski radyo
 ];
 
 export const kitchen = {

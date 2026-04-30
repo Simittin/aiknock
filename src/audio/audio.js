@@ -129,56 +129,205 @@ export function playThunder() {
     console.log('[audio] playThunder', { ctxState: ctx?.state, master: !!masterGain });
     if (!ctx || !masterGain) return;
     const t = ctx.currentTime;
-
-    // Dedicated noise buffer (cache paylaşımına bağlı kalmamak için)
     const sr = ctx.sampleRate;
-    const buf = ctx.createBuffer(1, sr * 5, sr);
-    const data = buf.getChannelData(0);
-    for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
 
-    // Crack
-    const crack = ctx.createBufferSource();
-    crack.buffer = buf;
-    const hpC = ctx.createBiquadFilter();
-    hpC.type = 'highpass';
-    hpC.frequency.value = 800;
-    const gC = ctx.createGain();
-    gC.gain.setValueAtTime(0.0001, t);
-    gC.gain.linearRampToValueAtTime(0.85, t + 0.015);
-    gC.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
-    crack.connect(hpC).connect(gC).connect(masterGain);
-    crack.start(t);
-    crack.stop(t + 0.45);
+    // --- Ortak noise buffer (10 saniyelik — uzun gök gürültüsü için) ---
+    const noiseDur = 10;
+    const buf = ctx.createBuffer(2, sr * noiseDur, sr);
+    for (let ch = 0; ch < 2; ch++) {
+        const d = buf.getChannelData(ch);
+        for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    }
 
-    // Rumble
-    const rumble = ctx.createBufferSource();
-    rumble.buffer = buf;
-    rumble.loop = true;
-    const lpR = ctx.createBiquadFilter();
-    lpR.type = 'lowpass';
-    lpR.frequency.value = 180;
-    lpR.Q.value = 0.6;
-    const gR = ctx.createGain();
-    gR.gain.setValueAtTime(0.0001, t + 0.1);
-    gR.gain.linearRampToValueAtTime(0.9, t + 0.6);
-    gR.gain.linearRampToValueAtTime(0.6, t + 2.2);
-    gR.gain.exponentialRampToValueAtTime(0.001, t + 5);
-    rumble.connect(lpR).connect(gR).connect(masterGain);
-    rumble.start(t);
-    rumble.stop(t + 5.3);
+    // --- Reverb impulse (uzun kuyruklu, gökyüzü genişliği için) ---
+    const reverbLen = 5;
+    const reverbBuf = ctx.createBuffer(2, sr * reverbLen, sr);
+    for (let ch = 0; ch < 2; ch++) {
+        const rd = reverbBuf.getChannelData(ch);
+        for (let i = 0; i < rd.length; i++) {
+            rd[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / rd.length, 2.0);
+        }
+    }
+    const reverb = ctx.createConvolver();
+    reverb.buffer = reverbBuf;
+    const reverbGain = ctx.createGain();
+    reverbGain.gain.value = 0.30;
+    reverb.connect(reverbGain).connect(masterGain);
 
-    // Sub-bass
-    const sub = ctx.createOscillator();
-    sub.type = 'sine';
-    sub.frequency.setValueAtTime(50, t);
-    sub.frequency.exponentialRampToValueAtTime(28, t + 1.2);
-    const gS = ctx.createGain();
-    gS.gain.setValueAtTime(0.0001, t);
-    gS.gain.linearRampToValueAtTime(0.5, t + 0.25);
-    gS.gain.exponentialRampToValueAtTime(0.001, t + 2);
-    sub.connect(gS).connect(masterGain);
-    sub.start(t);
-    sub.stop(t + 2.2);
+    // Dry/wet bus
+    const dryBus = ctx.createGain();
+    dryBus.gain.value = 0.8;
+    dryBus.connect(masterGain);
+    dryBus.connect(reverb);
+
+    // ============================================================
+    // 1) MUFFLED ONSET — yumuşak, boğuk başlangıç (şimşek değil, uzak gürültü)
+    // ============================================================
+    const onset = ctx.createBufferSource();
+    onset.buffer = buf;
+    const lpOnset = ctx.createBiquadFilter();
+    lpOnset.type = 'lowpass';
+    lpOnset.frequency.value = 600;
+    lpOnset.Q.value = 0.4;
+    const gOnset = ctx.createGain();
+    gOnset.gain.setValueAtTime(0.0001, t);
+    gOnset.gain.linearRampToValueAtTime(0.25, t + 0.08);
+    gOnset.gain.linearRampToValueAtTime(0.15, t + 0.3);
+    gOnset.gain.exponentialRampToValueAtTime(0.001, t + 0.8);
+    onset.connect(lpOnset).connect(gOnset).connect(dryBus);
+    onset.start(t);
+    onset.stop(t + 1.0);
+
+    // ============================================================
+    // 2) ROLLING RUMBLE WAVE 1 — ilk yuvarlanma dalgası
+    //    Amplitude LFO ile dalgalanan gürültü
+    // ============================================================
+    const roll1 = ctx.createBufferSource();
+    roll1.buffer = buf;
+    roll1.loop = true;
+    const lpRoll1 = ctx.createBiquadFilter();
+    lpRoll1.type = 'lowpass';
+    lpRoll1.frequency.value = 200;
+    lpRoll1.Q.value = 0.6;
+    // Amplitude modulation — ses yükselip alçalır, yuvarlanma hissi
+    const ampLfo1 = ctx.createOscillator();
+    ampLfo1.type = 'sine';
+    ampLfo1.frequency.value = 0.4 + Math.random() * 0.3;
+    const ampLfoGain1 = ctx.createGain();
+    ampLfoGain1.gain.value = 0.15;
+    const ampOffset1 = ctx.createGain();
+    ampOffset1.gain.value = 0.30;
+    // LFO → gain modulation
+    const roll1Gain = ctx.createGain();
+    roll1Gain.gain.setValueAtTime(0.0001, t + 0.1);
+    roll1Gain.gain.linearRampToValueAtTime(0.45, t + 0.5);
+    roll1Gain.gain.linearRampToValueAtTime(0.35, t + 2.5);
+    roll1Gain.gain.linearRampToValueAtTime(0.15, t + 5.0);
+    roll1Gain.gain.exponentialRampToValueAtTime(0.001, t + 7.5);
+    // Frekans modülasyonu — filtre frekansını sallandır
+    const freqLfo1 = ctx.createOscillator();
+    freqLfo1.type = 'sine';
+    freqLfo1.frequency.value = 0.3;
+    const freqLfoGain1 = ctx.createGain();
+    freqLfoGain1.gain.value = 60;
+    freqLfo1.connect(freqLfoGain1).connect(lpRoll1.frequency);
+    freqLfo1.start(t + 0.1);
+    ampLfo1.connect(ampLfoGain1).connect(roll1Gain.gain);
+    ampLfo1.start(t + 0.1);
+    roll1.connect(lpRoll1).connect(roll1Gain).connect(dryBus);
+    roll1.start(t + 0.1);
+    roll1.stop(t + 7.8);
+    ampLfo1.stop(t + 7.8);
+    freqLfo1.stop(t + 7.8);
+
+    // ============================================================
+    // 3) ROLLING RUMBLE WAVE 2 — ikinci dalga, biraz gecikmeli
+    //    Farklı LFO hızı ile interferans yaratır
+    // ============================================================
+    const roll2 = ctx.createBufferSource();
+    roll2.buffer = buf;
+    roll2.loop = true;
+    const lpRoll2 = ctx.createBiquadFilter();
+    lpRoll2.type = 'lowpass';
+    lpRoll2.frequency.value = 140;
+    lpRoll2.Q.value = 0.5;
+    const ampLfo2 = ctx.createOscillator();
+    ampLfo2.type = 'sine';
+    ampLfo2.frequency.value = 0.25 + Math.random() * 0.2;
+    const ampLfoGain2 = ctx.createGain();
+    ampLfoGain2.gain.value = 0.12;
+    const roll2Gain = ctx.createGain();
+    roll2Gain.gain.setValueAtTime(0.0001, t + 0.4);
+    roll2Gain.gain.linearRampToValueAtTime(0.35, t + 1.0);
+    roll2Gain.gain.linearRampToValueAtTime(0.30, t + 3.0);
+    roll2Gain.gain.linearRampToValueAtTime(0.10, t + 6.0);
+    roll2Gain.gain.exponentialRampToValueAtTime(0.001, t + 8.5);
+    const freqLfo2 = ctx.createOscillator();
+    freqLfo2.type = 'sine';
+    freqLfo2.frequency.value = 0.18;
+    const freqLfoGain2 = ctx.createGain();
+    freqLfoGain2.gain.value = 45;
+    freqLfo2.connect(freqLfoGain2).connect(lpRoll2.frequency);
+    freqLfo2.start(t + 0.4);
+    ampLfo2.connect(ampLfoGain2).connect(roll2Gain.gain);
+    ampLfo2.start(t + 0.4);
+    roll2.connect(lpRoll2).connect(roll2Gain).connect(dryBus);
+    roll2.start(t + 0.4);
+    roll2.stop(t + 8.8);
+    ampLfo2.stop(t + 8.8);
+    freqLfo2.stop(t + 8.8);
+
+    // ============================================================
+    // 4) ROLLING RUMBLE WAVE 3 — üçüncü dalga, en derin ve en geç
+    // ============================================================
+    const roll3 = ctx.createBufferSource();
+    roll3.buffer = buf;
+    roll3.loop = true;
+    const lpRoll3 = ctx.createBiquadFilter();
+    lpRoll3.type = 'lowpass';
+    lpRoll3.frequency.value = 100;
+    lpRoll3.Q.value = 0.4;
+    const ampLfo3 = ctx.createOscillator();
+    ampLfo3.type = 'sine';
+    ampLfo3.frequency.value = 0.15 + Math.random() * 0.15;
+    const ampLfoGain3 = ctx.createGain();
+    ampLfoGain3.gain.value = 0.10;
+    const roll3Gain = ctx.createGain();
+    roll3Gain.gain.setValueAtTime(0.0001, t + 0.8);
+    roll3Gain.gain.linearRampToValueAtTime(0.25, t + 1.8);
+    roll3Gain.gain.linearRampToValueAtTime(0.20, t + 4.0);
+    roll3Gain.gain.linearRampToValueAtTime(0.08, t + 6.5);
+    roll3Gain.gain.exponentialRampToValueAtTime(0.001, t + 9.0);
+    ampLfo3.connect(ampLfoGain3).connect(roll3Gain.gain);
+    ampLfo3.start(t + 0.8);
+    roll3.connect(lpRoll3).connect(roll3Gain).connect(dryBus);
+    roll3.start(t + 0.8);
+    roll3.stop(t + 9.3);
+    ampLfo3.stop(t + 9.3);
+
+    // ============================================================
+    // 5) SUB-BASS DRONES — iki osilator, hafif frekans farkıyla beating
+    // ============================================================
+    const sub1 = ctx.createOscillator();
+    sub1.type = 'sine';
+    sub1.frequency.setValueAtTime(38, t);
+    sub1.frequency.exponentialRampToValueAtTime(22, t + 4.0);
+    const sub2 = ctx.createOscillator();
+    sub2.type = 'sine';
+    sub2.frequency.setValueAtTime(40, t);
+    sub2.frequency.exponentialRampToValueAtTime(23, t + 4.0);
+    const gSub = ctx.createGain();
+    gSub.gain.setValueAtTime(0.0001, t + 0.1);
+    gSub.gain.linearRampToValueAtTime(0.22, t + 0.6);
+    gSub.gain.linearRampToValueAtTime(0.15, t + 2.5);
+    gSub.gain.exponentialRampToValueAtTime(0.001, t + 5.0);
+    sub1.connect(gSub);
+    sub2.connect(gSub);
+    gSub.connect(dryBus);
+    sub1.start(t + 0.1);
+    sub2.start(t + 0.1);
+    sub1.stop(t + 5.2);
+    sub2.stop(t + 5.2);
+
+    // ============================================================
+    // 6) DISTANT TAIL — en sona kalan uzak, karanlık kuyruk
+    // ============================================================
+    const tail = ctx.createBufferSource();
+    tail.buffer = buf;
+    tail.loop = true;
+    const lpTail = ctx.createBiquadFilter();
+    lpTail.type = 'lowpass';
+    lpTail.frequency.value = 180;
+    lpTail.Q.value = 0.3;
+    const gTail = ctx.createGain();
+    const tailDelay = 1.5 + Math.random() * 1.0;
+    gTail.gain.setValueAtTime(0.0001, t + tailDelay);
+    gTail.gain.linearRampToValueAtTime(0.10, t + tailDelay + 0.8);
+    gTail.gain.linearRampToValueAtTime(0.06, t + tailDelay + 3.0);
+    gTail.gain.exponentialRampToValueAtTime(0.001, t + tailDelay + 5.0);
+    tail.connect(lpTail).connect(gTail).connect(dryBus);
+    tail.start(t + tailDelay);
+    tail.stop(t + tailDelay + 5.3);
 }
 
 export function startDrone() {

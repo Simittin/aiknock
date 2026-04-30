@@ -342,6 +342,140 @@ function drawRecordPlayer(g) {
     g.fillRect(5, 11, 1, 1);
 }
 
+// --- LORE NESNE SPRİTE'LARI ---
+
+function drawMovieTicket(g) {
+    // Yıpranmış sinema bileti
+    g.fillStyle = PAL.paper;
+    g.fillRect(2, 4, 12, 8);
+    // Kenar yıpranma — koyu köşeler
+    g.fillStyle = '#b8a878';
+    g.fillRect(2, 4, 2, 1);
+    g.fillRect(12, 11, 2, 1);
+    // Perforasyon (delikli kesişim çizgisi)
+    g.fillStyle = PAL.floorA;
+    g.fillRect(10, 4, 1, 1);
+    g.fillRect(10, 6, 1, 1);
+    g.fillRect(10, 8, 1, 1);
+    g.fillRect(10, 10, 1, 1);
+    // Yazılar
+    g.fillStyle = PAL.ink;
+    g.fillRect(3, 5, 5, 1);
+    g.fillRect(3, 7, 6, 1);
+    g.fillRect(3, 9, 4, 1);
+    // Küçük film şeridi ikonu (sağ kısım)
+    g.fillStyle = PAL.walnut;
+    g.fillRect(11, 5, 2, 5);
+    g.fillStyle = '#f8d878';
+    g.fillRect(12, 6, 1, 1);
+    g.fillRect(12, 8, 1, 1);
+}
+
+function drawLoreRecord(g) {
+    // Sessiz plak çalar — iğne durmuş
+    g.fillStyle = PAL.walnut;
+    g.fillRect(2, 7, 12, 7);
+    g.fillStyle = '#2a1a0a';
+    g.fillRect(2, 7, 12, 1);
+    // Plak (koyu daire)
+    g.fillStyle = '#0a0808';
+    g.fillRect(4, 8, 7, 5);
+    g.fillStyle = '#1a1a1a';
+    g.fillRect(5, 9, 5, 3);
+    // Etiket (kırmızı merkez)
+    g.fillStyle = PAL.blood;
+    g.fillRect(7, 10, 1, 1);
+    // İğne kolu — kalmış, plak üzerinde
+    g.fillStyle = PAL.steel;
+    g.fillRect(12, 8, 1, 4);
+    g.fillRect(10, 11, 2, 1);
+    // Çizikler (yıpranma)
+    g.fillStyle = '#2a2a2a';
+    g.fillRect(5, 10, 3, 1);
+}
+
+function drawFadedPhoto(g) {
+    // Solmuş fotoğraf — sepia çerçeve
+    g.fillStyle = PAL.walnut;
+    g.fillRect(2, 2, 12, 12);
+    // Fotoğraf içi (solmuş sepia)
+    g.fillStyle = '#a89068';
+    g.fillRect(3, 3, 10, 10);
+    // İki adam silüeti
+    g.fillStyle = '#6a5838';
+    g.fillRect(5, 5, 2, 5);   // sol adam
+    g.fillRect(9, 5, 2, 5);   // sağ adam
+    // Kafalar
+    g.fillStyle = '#7a6848';
+    g.fillRect(5, 4, 2, 1);
+    g.fillRect(9, 4, 2, 1);
+    // Rozet parlıltısı (sol adamın göğsü)
+    g.fillStyle = '#c8a858';
+    g.fillRect(5, 6, 1, 1);
+    // Solma efekti — köşelerde ağarma
+    g.fillStyle = '#c8b888';
+    g.fillRect(3, 3, 2, 1);
+    g.fillRect(11, 11, 2, 1);
+}
+
+function drawDustyBoots(g) {
+    // Eski deri çizmeler
+    // Sol çizme
+    g.fillStyle = '#3a2008';
+    g.fillRect(2, 5, 4, 8);    // gövde
+    g.fillRect(1, 13, 5, 2);   // taban
+    g.fillStyle = '#2a1808';
+    g.fillRect(2, 5, 4, 1);    // üst kenar
+    g.fillStyle = PAL.rust;
+    g.fillRect(3, 8, 2, 1);    // deri kırışığı
+    // Sağ çizme
+    g.fillStyle = '#3a2008';
+    g.fillRect(9, 6, 4, 7);    // gövde (hafif yan yatmış)
+    g.fillRect(8, 13, 6, 2);   // taban
+    g.fillStyle = '#2a1808';
+    g.fillRect(9, 6, 4, 1);
+    g.fillStyle = PAL.rust;
+    g.fillRect(10, 9, 2, 1);   // deri kırışığı
+    // Toz parçacıkları
+    g.fillStyle = '#8a7a5a';
+    g.fillRect(1, 15, 1, 1);
+    g.fillRect(6, 14, 1, 1);
+    g.fillRect(14, 15, 1, 1);
+}
+
+function drawOldRadio(g) {
+    // Eski tüp radyo
+    g.fillStyle = PAL.walnut;
+    g.fillRect(2, 4, 12, 10);
+    // Üst kenar süs
+    g.fillStyle = '#4a2a10';
+    g.fillRect(2, 4, 12, 1);
+    // Hoparlör ızgarası (sol kısım)
+    g.fillStyle = PAL.floorLine;
+    g.fillRect(3, 6, 5, 6);
+    g.fillStyle = '#3a2a18';
+    g.fillRect(4, 7, 1, 1);
+    g.fillRect(6, 7, 1, 1);
+    g.fillRect(4, 9, 1, 1);
+    g.fillRect(6, 9, 1, 1);
+    g.fillRect(4, 11, 1, 1);
+    g.fillRect(6, 11, 1, 1);
+    // Kadran paneli (sağ kısım)
+    g.fillStyle = '#1a1208';
+    g.fillRect(9, 6, 4, 4);
+    // Kadran iğnesi
+    g.fillStyle = PAL.brass;
+    g.fillRect(10, 7, 1, 1);
+    g.fillRect(11, 8, 1, 1);
+    // Ayar düğmeleri
+    g.fillStyle = PAL.brassDim;
+    g.fillRect(9, 11, 2, 2);
+    g.fillRect(12, 11, 2, 2);
+    // Cızırtı görünümü — kadran içi nokta
+    g.fillStyle = '#f8d878';
+    g.fillRect(10, 9, 1, 1);
+}
+
 function buildObjectSprites() {
     const map = {
         letter: drawLetter,
@@ -352,6 +486,12 @@ function buildObjectSprites() {
         window: drawWindow,
         record_player: drawRecordPlayer,
         npc:    drawMom,
+        // Lore Easter egg sprite'ları
+        movie_ticket:  drawMovieTicket,
+        lore_record:   drawLoreRecord,
+        faded_photo:   drawFadedPhoto,
+        dusty_boots:   drawDustyBoots,
+        old_radio:     drawOldRadio,
     };
     const out = {};
     for (const [kind, fn] of Object.entries(map)) {

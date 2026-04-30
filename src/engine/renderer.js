@@ -64,7 +64,8 @@ function drawObjects(objs) {
         if (!def) continue;
         const sprite = sprites.objects[def.kind];
         if (!sprite) continue;
-        const done = isCompleted(o.id);
+        // Lore nesneleri hep tam opasite — tamamlanma kavramı yok
+        const done = !def.lore && isCompleted(o.id);
         if (done) ctx.globalAlpha = 0.45;
         ctx.drawImage(sprite, o.col * TILE, o.row * TILE);
         if (done) {
@@ -106,8 +107,13 @@ function drawHint(obj) {
     } else {
         const def = OBJECT_DB[obj.id];
         if (!def) return;
-        const done = isCompleted(obj.id);
-        text = done ? `[X] TAMAMLANDI` : `[E] ${def.name.toUpperCase()}`;
+        // Lore nesneleri her zaman [E] ile etkileşilebilir
+        if (def.lore) {
+            text = `[E] ${def.name.toUpperCase()}`;
+        } else {
+            const done = isCompleted(obj.id);
+            text = done ? `[X] TAMAMLANDI` : `[E] ${def.name.toUpperCase()}`;
+        }
     }
     const objCx = obj.col * TILE + TILE / 2;
     const objTop = obj.row * TILE;

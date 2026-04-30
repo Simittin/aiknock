@@ -25,6 +25,9 @@ const objects = [
     { id: 'letter', col: 5,  row: 3 },  // yatağın yanında, komodine yakın
     { id: 'toy',    col: 10, row: 8 },  // odanın ortasında, yere düşmüş
     { id: 'guitar', col: 17, row: 4 },  // dolabın altında duvara yaslı
+    // Lore Easter egg'leri
+    { id: 'movie_ticket', col: 8,  row: 3 },  // komodinin yakınında, masada bilet
+    { id: 'lore_record',  col: 3,  row: 8 },  // sol alt köşede sessiz pikap
 ];
 
 export const bedroom = {

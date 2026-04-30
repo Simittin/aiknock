@@ -6,6 +6,8 @@ import { resolveMove } from './collision.js';
 import { initRenderer, render } from './renderer.js';
 import { findInteraction } from './interaction.js';
 import { openConversation, isDialogOpen, closeDialog } from '../ui/dialog.js';
+import { isLoreOpen, openLore, closeLore } from '../ui/lore.js';
+import { objects as OBJECT_DB } from '../objects/index.js';
 import { getSpeedMultiplier } from '../state/burden.js';
 import { isCompleted } from '../state/scores.js';
 import { isFinaleActive, startFinaleAttempt, tickFinale } from '../ui/finale.js';
@@ -53,9 +55,13 @@ function update() {
         return;
     }
 
-    // Diyalog açıkken motor donar — input modülü kendi Enter/Esc'ini yakalar.
+    // Diyalog veya lore açıkken motor donar — input modülü kendi Enter/Esc'ini yakalar.
     if (isDialogOpen()) {
         if (consumeKey('escape')) closeDialog();
+        updateAnim(0, 0);
+        return;
+    }
+    if (isLoreOpen()) {
         updateAnim(0, 0);
         return;
     }
@@ -95,16 +101,23 @@ function update() {
         if (nearby.isFinale) {
             Audio.playInteract();
             startFinaleAttempt(player, nearby);
-        } else if (!isCompleted(nearby.id)) {
-            Audio.playInteract();
-            openConversation({ objectId: nearby.id });
+        } else {
+            const def = OBJECT_DB[nearby.id];
+            if (def && def.lore) {
+                // Statik lore nesnesi — AI yok, burden yok
+                Audio.playInteract();
+                openLore(nearby.id);
+            } else if (!isCompleted(nearby.id)) {
+                Audio.playInteract();
+                openConversation({ objectId: nearby.id });
+            }
         }
     }
 }
 
 function frame() {
     update();
-    render(rooms[currentRoomId], player, isDialogOpen() ? null : nearby);
+    render(rooms[currentRoomId], player, (isDialogOpen() || isLoreOpen()) ? null : nearby);
     requestAnimationFrame(frame);
 }
 
