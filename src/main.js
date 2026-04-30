@@ -9,8 +9,10 @@ import { clearProfile } from './state/profile.js';
 import { getApiKey } from './ai/env-loader.js';
 import { onSentimentState } from './ai/sentiment.js';
 import * as Audio from './audio/audio.js';
+import { generateEndingMusic, resetEndingMusic } from './audio/ending-music.js';
 
 const TOTAL_OBJECTS = 8;
+let endingMusicTriggered = false;
 
 const canvas    = document.getElementById('game-canvas');
 const gameContainer = document.getElementById('game-container');
@@ -56,6 +58,22 @@ function paintProgress() {
     const done = getCompletedCount();
     const total = getTotalScore();
     hudProgress.textContent = `YANSIMALAR: ${done}/${TOTAL_OBJECTS}     PUAN: ${total}`;
+
+    // ─── Pre-fetch: Son nesne etkileşimine 1 kala müzik üretimini başlat ───
+    // Oyuncu TOTAL_OBJECTS - 1 nesneyi tamamladığında tetiklenir.
+    // generateEndingMusic kendi içinde cache/threshold kontrolü yapar —
+    // aynı eşik ile tekrar çağrılırsa gereksiz üretim yapmaz.
+    if (done >= TOTAL_OBJECTS - 1) {
+        const currentBurden = getBurden();
+        window._lastBurdenForMusic = currentBurden;
+        if (!endingMusicTriggered) {
+            endingMusicTriggered = true;
+            console.log(`[main] Ending müzik pre-fetch tetiklendi — burden: ${currentBurden}, tamamlanan: ${done}/${TOTAL_OBJECTS}`);
+        }
+        generateEndingMusic(currentBurden).catch((err) => {
+            console.warn('[main] Ending müzik üretim hatası:', err);
+        });
+    }
 }
 
 onSentimentState((state) => {
@@ -76,6 +94,8 @@ async function boot() {
     clearProfile();
     resetBurden();
     resetScores();
+    resetEndingMusic();
+    endingMusicTriggered = false;
 
     // Oyun motoru intro tamamlanana kadar gizli — sadece modal görünür
     gameContainer.classList.add('pre-intro');
@@ -124,6 +144,24 @@ const OBJECT_IDS = ['letter', 'toy', 'guitar', 'gun', 'badge', 'window', 'mom', 
 window.cheat = {
     completeAll() { OBJECT_IDS.forEach((id) => markCompleted(id)); },
     setBurden(v)  { setBurden(v); },
-    lightEnd()    { OBJECT_IDS.forEach((id) => markCompleted(id)); setBurden(20); console.log('OK — kapıya yürü, E ile aç. burden=20 (LIGHT)'); },
-    heavyEnd()    { OBJECT_IDS.forEach((id) => markCompleted(id)); setBurden(80); console.log('OK — kapıya yürü, E ile aç. burden=80 (HEAVY)'); },
+    lightEnd()    {
+        OBJECT_IDS.forEach((id) => markCompleted(id));
+        setBurden(20);
+        // Önceki cache'i sıfırla ve yeniden üret
+        resetEndingMusic();
+        endingMusicTriggered = true;
+        window._lastBurdenForMusic = 20;
+        generateEndingMusic(20).catch(() => {});
+        console.log('OK — kapıya yürü, E ile aç. burden=20 (LIGHT) + ending müzik üretiliyor…');
+    },
+    heavyEnd()    {
+        OBJECT_IDS.forEach((id) => markCompleted(id));
+        setBurden(80);
+        // Önceki cache'i sıfırla ve yeniden üret
+        resetEndingMusic();
+        endingMusicTriggered = true;
+        window._lastBurdenForMusic = 80;
+        generateEndingMusic(80).catch(() => {});
+        console.log('OK — kapıya yürü, E ile aç. burden=80 (HEAVY) + ending müzik üretiliyor…');
+    },
 };

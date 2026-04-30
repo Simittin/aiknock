@@ -13,6 +13,7 @@ import { TILE, PLAYER_SIZE, WALK_TICKS } from '../config.js';
 import { getBurden } from '../state/burden.js';
 import { getCompletedCount } from '../state/scores.js';
 import * as Audio from '../audio/audio.js';
+import { playEndingMusic } from '../audio/ending-music.js';
 
 const TOTAL_OBJECTS = 7;
 const HEAVY_THRESHOLD = 50;
@@ -145,4 +146,14 @@ function startCredits() {
     const container = document.querySelector('.crt');
     container.classList.remove('ending-heavy');
     document.getElementById('credits-overlay').classList.add('visible');
+
+    // Bitiş müziğini çal — AI veya prosedürel fallback
+    // GÜNCEL burden'ı gönder — cache sorununu önler
+    try {
+        const ctx = Audio.getAudioContext();
+        const gain = Audio.getMasterGain();
+        playEndingMusic(ctx, gain, getBurden());
+    } catch (e) {
+        console.warn('[finale] Ending müzik çalınamadı:', e.message);
+    }
 }

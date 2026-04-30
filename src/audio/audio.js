@@ -483,6 +483,10 @@ export function playKnockTheme() {
     }
 }
 
+// ─── Ending music entegrasyonu için context/gain erişimi ─────────────
+export function getAudioContext() { ensure(); return ctx; }
+export function getMasterGain()   { ensure(); return masterGain; }
+
 // Console diagnostic — F12'den `testThunder()` ile çalıştırılabilir
 if (typeof window !== 'undefined') {
     window.testThunder = () => {
