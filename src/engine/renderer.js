@@ -8,6 +8,16 @@ let ctx = null;
 let sprites = null;
 let dust = [];
 
+/* ── Phantom Trail state ── */
+const TRAIL_MAX = 8;
+let positionHistory = [];   // [{x, y, dir, animFrame}, ...]
+
+/* ── Lightning flash state ── */
+let lightningAlpha = 0;     // fades each frame
+
+/* ── Rain particle pool (kitchen window) ── */
+let raindrops = [];
+
 function initDust() {
     dust = [];
     for (let i = 0; i < 15; i++) {
@@ -142,29 +152,58 @@ function drawRoomEnhancements(room) {
             ctx.fillRect(dx, dy, 1, 1);
         }
     } else if (room.id === 'living_room') {
+        /* ── 4. Dying Fire — burden-reactive fireplace glow ── */
         const fx = 5 * TILE + 24;
         const fy = TILE * 2;
-        const pulse = Math.sin(time / 200) * 5;
-        const grad = ctx.createRadialGradient(fx, fy, 10 + pulse, fx, fy, 80 + pulse * 2);
-        grad.addColorStop(0, 'rgba(255, 80, 0, 0.2)');
+        const burden = getBurden();
+        const t = burden / 100;        // 0 = carefree, 1 = crushed
+
+        let radius, pulse, baseAlpha;
+        if (burden < 30) {
+            // Warm, large, slow-breathing fire
+            radius = 80 + (1 - t) * 40;          // big radius at low burden
+            pulse = Math.sin(time / 500) * 6;    // slow gentle pulse
+            baseAlpha = 0.22;
+        } else if (burden > 70) {
+            // Dying ember — small, erratic flicker
+            radius = 30 + Math.random() * 10;    // tiny + jitter
+            pulse = Math.random() * 8 - 4;       // random flicker
+            baseAlpha = 0.08 + Math.random() * 0.06;
+        } else {
+            // Mid range — moderate glow
+            radius = 80 - t * 50;
+            pulse = Math.sin(time / 300) * 5;
+            baseAlpha = 0.18 - t * 0.08;
+        }
+
+        const grad = ctx.createRadialGradient(fx, fy, 10 + pulse, fx, fy, radius + pulse * 2);
+        grad.addColorStop(0, `rgba(255, 80, 0, ${baseAlpha})`);
         grad.addColorStop(1, 'rgba(255, 80, 0, 0)');
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, VIEW_W, VIEW_H);
     } else if (room.id === 'kitchen') {
+        /* ── 3. Dynamic Weather — burden-reactive rain + lightning ── */
+        const burden = getBurden();
+        const t = burden / 100;
         const wx = 10 * TILE;
         const wy = 0 * TILE;
         ctx.beginPath();
         ctx.rect(wx, wy, TILE, TILE);
         ctx.clip();
-        
-        ctx.strokeStyle = 'rgba(200, 220, 255, 0.4)';
+
+        // Rain density and speed scale with burden
+        const dropCount = Math.floor(4 + t * 14);      // 4–18 drops
+        const speed = 0.12 + t * 0.35;                  // vertical velocity multiplier
+
+        ctx.strokeStyle = `rgba(200, 220, 255, ${0.3 + t * 0.3})`;
         ctx.lineWidth = 0.5;
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < dropCount; i++) {
             const rx = wx + ((time * 0.1 + i * 5) % TILE);
-            const ry = wy + ((time * 0.2 + i * 7) % TILE);
+            const ry = wy + ((time * speed + i * 7) % TILE);
+            const len = 3 + t * 3;    // longer streaks at high burden
             ctx.beginPath();
             ctx.moveTo(rx, ry);
-            ctx.lineTo(rx - 2, ry + 4);
+            ctx.lineTo(rx - 1, ry + len);
             ctx.stroke();
         }
     }
@@ -610,6 +649,38 @@ function drawObjects(objs) {
 function drawPlayer(player) {
     const dir = player.dir;
     const f = player.animFrame;
+
+    /* ── 1. Phantom Trail — dragging soul at burden > 50 ── */
+    const burden = getBurden();
+    if (burden > 50) {
+        const intensity = (burden - 50) / 50; // 0→1 over burden 50–100
+        const len = positionHistory.length;
+        for (let i = 0; i < len; i++) {
+            const ghost = positionHistory[i];
+            // Oldest = most transparent, newest = slightly visible
+            const alphaBase = 0.3 * intensity;
+            const alpha = alphaBase * (i / len);
+            if (alpha < 0.01) continue;
+            ctx.save();
+            ctx.globalAlpha = alpha;
+            if (ghost.dir === 'left') {
+                const spr = sprites.player[`right-${ghost.animFrame}`];
+                ctx.translate(ghost.x + SPRITE_SIZE, ghost.y - 1);
+                ctx.scale(-1, 1);
+                ctx.drawImage(spr, 0, 0);
+            } else {
+                const spr = sprites.player[`${ghost.dir}-${ghost.animFrame}`];
+                ctx.drawImage(spr, ghost.x - 1, ghost.y - 1);
+            }
+            ctx.restore();
+        }
+    }
+
+    // Record position for trail (always record so trail is ready when burden crosses 50)
+    positionHistory.push({ x: player.x, y: player.y, dir: player.dir, animFrame: player.animFrame });
+    if (positionHistory.length > TRAIL_MAX) positionHistory.shift();
+
+    // Draw actual player
     if (dir === 'left') {
         const sprite = sprites.player[`right-${f}`];
         ctx.save();
@@ -671,11 +742,18 @@ function drawHint(obj) {
 function drawVignette() {
     const score = getBurden();
     if (score < 10) return; // Düşük yükte temiz ekran
-    
+
+    /* ── 2b. Breathing Vignette — expands/contracts with burden ── */
+    const breathe = score > 30
+        ? Math.sin(Date.now() / 300) * (score / 100) * 0.06
+        : 0;
+
     const alpha = (score / 100) * 0.6; // Max 0.6 opacity
+    const innerR = VIEW_W * (0.2 - breathe);
+    const outerR = VIEW_W * (0.8 + breathe);
     const gradient = ctx.createRadialGradient(
-        VIEW_W / 2, VIEW_H / 2, VIEW_W * 0.2,
-        VIEW_W / 2, VIEW_H / 2, VIEW_W * 0.8
+        VIEW_W / 2, VIEW_H / 2, Math.max(0, innerR),
+        VIEW_W / 2, VIEW_H / 2, outerR
     );
     
     // Yük arttıkça renk siyahtan kan kırmızısına kayar
@@ -705,13 +783,47 @@ function drawDust() {
 }
 
 export function render(room, player, nearby) {
+    const burden = getBurden();
+
+    /* ── 2a. Anxiety Camera Shake — subtle jitter at burden > 70 ── */
+    const shaking = burden > 70;
+    if (shaking) {
+        ctx.save();
+        const intensity = ((burden - 70) / 30);   // 0→1 over 70–100
+        const sx = (Math.random() * 2 - 1) * intensity * 1.5;
+        const sy = (Math.random() * 2 - 1) * intensity * 1.5;
+        ctx.translate(sx, sy);
+    }
+
     ctx.fillStyle = PAL.bg;
     ctx.fillRect(0, 0, VIEW_W, VIEW_H);
     drawRoom(room);
     drawObjects(room.objects);
     drawRoomEnhancements(room);
+
+    /* ── 3b. Lightning Flash — kitchen only, burden > 80 ── */
+    if (room.id === 'kitchen' && burden > 80) {
+        // ~1% chance per frame to trigger a flash
+        if (lightningAlpha <= 0 && Math.random() < 0.01) {
+            lightningAlpha = 0.35 + Math.random() * 0.15;  // 0.35–0.5
+        }
+        if (lightningAlpha > 0) {
+            ctx.save();
+            ctx.fillStyle = `rgba(220, 230, 255, ${lightningAlpha})`;
+            ctx.fillRect(0, 0, VIEW_W, VIEW_H);
+            ctx.restore();
+            lightningAlpha -= 0.04;  // fade over ~10 frames
+            if (lightningAlpha < 0) lightningAlpha = 0;
+        }
+    } else if (room.id !== 'kitchen') {
+        lightningAlpha = 0; // reset when leaving kitchen
+    }
+
     drawPlayer(player);
     drawDust();
     drawVignette();
+
+    if (shaking) ctx.restore();
+
     if (nearby) drawHint(nearby);
 }
