@@ -312,6 +312,17 @@ function drawNightstand(x, y, w, h) {
     ctx.fillRect(x, y, w, h);
     ctx.strokeStyle = PAL.wallBot;
     ctx.strokeRect(x + 2, y + 2, w - 4, h - 4);
+    
+    ctx.fillStyle = '#ffcc00';
+    ctx.beginPath(); ctx.arc(x + 8, y + 8, 3, 0, Math.PI*2); ctx.fill();
+    ctx.save();
+    ctx.globalCompositeOperation = 'screen';
+    const grad = ctx.createRadialGradient(x + 8, y + 8, 2, x + 8, y + 8, 20);
+    grad.addColorStop(0, 'rgba(255, 200, 0, 0.4)');
+    grad.addColorStop(1, 'rgba(255, 200, 0, 0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(x - 12, y - 12, w + 24, h + 24);
+    ctx.restore();
 }
 
 function drawWardrobe(x, y, w, h) {
@@ -409,9 +420,59 @@ function drawCouch(x, y, w, h) {
     ctx.fillStyle = PAL.plush;
     ctx.fillRect(x, y, w, h);
     ctx.strokeStyle = PAL.wallBot;
-    for (let i = 0; i < w/TILE; i++) {
-        ctx.strokeRect(x + i*TILE + 2, y + 2, TILE - 4, h - 4);
+    ctx.lineWidth = 2;
+    
+    if (w > h) {
+        ctx.fillRect(x, y, 6, h);
+        ctx.fillRect(x + w - 6, y, 6, h);
+        for (let i = 0; i < w/TILE; i++) {
+            ctx.strokeRect(x + i*TILE + 2, y + 2, TILE - 4, h - 4);
+        }
+    } else {
+        ctx.fillRect(x, y, w, 6);
+        ctx.fillRect(x, y + h - 6, w, 6);
+        for (let i = 0; i < h/TILE; i++) {
+            ctx.strokeRect(x + 2, y + i*TILE + 2, w - 4, TILE - 4);
+        }
     }
+}
+
+function drawDesk(x, y, w, h) {
+    ctx.fillStyle = PAL.walnut;
+    ctx.fillRect(x, y, w, h);
+    
+    ctx.fillStyle = PAL.wallBot;
+    ctx.fillRect(x + w/2 - 6, y + h, 12, 4);
+    ctx.fillStyle = PAL.wallMid;
+    ctx.fillRect(x + w/2 - 6, y + h - 6, 12, 6);
+    
+    drawNotes(x + 4, y + 4);
+}
+
+function drawSideTable(x, y, w, h) {
+    ctx.fillStyle = PAL.cherry;
+    ctx.fillRect(x, y, w, h);
+    ctx.strokeStyle = PAL.wallBot;
+    ctx.strokeRect(x + 2, y + 2, w - 4, h - 4);
+}
+
+function drawGuitarStand(x, y, w, h) {
+    ctx.shadowColor = 'transparent';
+    ctx.fillStyle = '#111';
+    ctx.fillRect(x + 2, y + h - 4, w - 4, 4);
+}
+
+function drawPlant(x, y, w, h) {
+    ctx.fillStyle = '#6a3a18';
+    ctx.fillRect(x + 4, y + h - 10, w - 8, 10);
+    
+    ctx.fillStyle = '#1a4a2a';
+    ctx.beginPath(); ctx.arc(x + 8, y + h - 15, 6, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#2a5a3a';
+    ctx.beginPath(); ctx.arc(x + 4, y + h - 12, 5, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#1a5a2a';
+    ctx.beginPath(); ctx.arc(x + 12, y + h - 12, 5, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(x + 8, y + h - 20, 6, 0, Math.PI*2); ctx.fill();
 }
 
 function drawBookshelf(x, y, w, h) {
@@ -475,6 +536,10 @@ function drawFurniture(furniture) {
             case 'couch': drawCouch(px, py, pw, ph); break;
             case 'bookshelf': drawBookshelf(px, py, pw, ph); break;
             case 'fireplace': drawFireplace(px, py, pw, ph); break;
+            case 'desk': drawDesk(px, py, pw, ph); break;
+            case 'side_table': drawSideTable(px, py, pw, ph); break;
+            case 'guitar_stand': drawGuitarStand(px, py, pw, ph); break;
+            case 'plant': drawPlant(px, py, pw, ph); break;
         }
         ctx.restore();
     }
