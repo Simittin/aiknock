@@ -7,6 +7,7 @@ import { onBurdenChange, getBurden, resetBurden, setBurden } from './state/burde
 import { onScoresChange, getCompletedCount, getTotalScore, resetScores, markCompleted } from './state/scores.js';
 import { clearProfile } from './state/profile.js';
 import { getApiKey } from './ai/env-loader.js';
+import { onSentimentState } from './ai/sentiment.js';
 import * as Audio from './audio/audio.js';
 
 const TOTAL_OBJECTS = 7;
@@ -18,6 +19,10 @@ const hudPlayer = document.getElementById('hud-player');
 const burdenScoreEl = document.getElementById('burden-score');
 const burdenFillEl  = document.getElementById('burden-fill');
 const hudProgress   = document.getElementById('hud-progress');
+
+const modelLoadingOverlay = document.getElementById('model-loading-overlay');
+const modelProgressFill   = document.getElementById('model-progress-fill');
+const modelProgressPct    = document.getElementById('model-progress-pct');
 
 let lastBurdenSeen = 0;
 function paintBurden(score) {
@@ -48,6 +53,19 @@ function paintProgress() {
     const total = getTotalScore();
     hudProgress.textContent = `YANSIMALAR: ${done}/${TOTAL_OBJECTS}     PUAN: ${total}`;
 }
+
+onSentimentState((state) => {
+    if (state.status === 'loading' || state.status === 'progress') {
+        modelLoadingOverlay.classList.add('visible');
+        if (state.progress) {
+            const pct = Math.round(state.progress);
+            modelProgressFill.style.width = `${pct}%`;
+            modelProgressPct.textContent = `${pct}%`;
+        }
+    } else {
+        modelLoadingOverlay.classList.remove('visible');
+    }
+});
 
 async function boot() {
     // Her sayfa yenilemesinde temiz başla — kalıcılık devre dışı
