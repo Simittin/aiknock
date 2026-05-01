@@ -16,25 +16,40 @@ function build() {
 
 const tiles = build();
 
+// Oturma Odası — hub. Şiddet ve kimlik. Yoğun mobilya, hayatın orta katmanı.
 const furniture = [
-    { type: 'rug', col: 7, row: 4, w: 7, h: 4, blocking: false },
-    { type: 'coffee_table', col: 9, row: 5, w: 3, h: 2 },
-    { type: 'couch', col: 8, row: 8, w: 5, h: 1 }, 
-    { type: 'couch', col: 7, row: 5, w: 1, h: 2 }, // left armchair
-    { type: 'couch', col: 13, row: 5, w: 1, h: 2 }, // right armchair
-    { type: 'bookshelf', col: 13, row: 9, w: 4, h: 1 },
-    { type: 'fireplace', col: 5, row: 1, w: 3, h: 1 },
-    { type: 'plant', col: 17, row: 1, w: 2, h: 2 } // Corner filler
+    // Şömine bölgesi (sol üst — silah orada asılı)
+    { type: 'fireplace',    col: 4,  row: 1,  w: 3, h: 1 },
+    { type: 'side_table',   col: 2,  row: 1,  w: 1, h: 1 },
+    { type: 'floor_lamp',   col: 7,  row: 1,  w: 1, h: 2 },
+
+    // Sağ üst köşe — bitki + Cennetin Kapısı'na giden alan boş tutulur
+    { type: 'plant',        col: 17, row: 1,  w: 2, h: 2 },
+    { type: 'curtain',      col: 12, row: 0,  w: 5, h: 1, blocking: false },
+
+    // Merkez — halı, sehpa, kanepe (oturma alanı)
+    { type: 'rug',          col: 5,  row: 4,  w: 9, h: 5, blocking: false },
+    { type: 'coffee_table', col: 9,  row: 5,  w: 3, h: 2 },
+    { type: 'couch',        col: 7,  row: 5,  w: 1, h: 2 },   // sol koltuk
+    { type: 'couch',        col: 13, row: 5,  w: 1, h: 2 },   // sağ koltuk
+    { type: 'couch',        col: 8,  row: 8,  w: 5, h: 1 },   // ana kanepe
+
+    // Sol alt — TV kombinesi (1973 atmosferi)
+    { type: 'tv_set',       col: 2,  row: 8,  w: 2, h: 2 },
+    { type: 'side_table',   col: 5,  row: 9,  w: 1, h: 1 },
+
+    // Sağ alt — kitaplık + plak çalar
+    { type: 'bookshelf',    col: 14, row: 9,  w: 4, h: 1 },
+    { type: 'chair',        col: 18, row: 8,  w: 1, h: 2 },
 ];
 
-// Faz 2'de "dış kapı" finali henüz yok; eklendiğinde buradan çıkılacak.
 const objects = [
-    { id: 'gun',           col: 6, row: 0 },  // ON FIREPLACE WALL
-    { id: 'badge',         col: 10, row: 5 },  // ON COFFEE TABLE
-    { id: 'record_player', col: 14, row: 9 },  // ON BOOKSHELF
+    { id: 'gun',           col: 5,  row: 0 },   // şömine üstünde, duvarda asılı
+    { id: 'badge',         col: 10, row: 5 },   // sehpa üzerinde parıldıyor
+    { id: 'record_player', col: 15, row: 9 },   // kitaplığın üstünde
     // Lore Easter egg'leri
-    { id: 'faded_photo',   col: 4,  row: 0 },  // ON WALL
-    { id: 'dusty_boots',   col: 18, row: 8 },  // floor
+    { id: 'faded_photo',   col: 3,  row: 0 },   // duvar
+    { id: 'dusty_boots',   col: 18, row: 8 },   // sandalyenin yanında
 ];
 
 export const livingRoom = {

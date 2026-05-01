@@ -12,20 +12,42 @@ function build() {
 
 const tiles = build();
 
+// Yatak Odası — geçmiş ve veda. Sıkı dolu, dışa kapalı bir oda hissi.
 const furniture = [
-    { type: 'rug', col: 5, row: 3, w: 8, h: 5, blocking: false },
-    { type: 'bed', col: 2, row: 2, w: 3, h: 2 },
-    { type: 'nightstand', col: 6, row: 2, w: 1, h: 1 },
-    { type: 'wardrobe', col: 16, row: 1, w: 2, h: 2 }
+    // Merkezi halı — yürünebilir, oda altını sıcak gösterir
+    { type: 'rug',          col: 6,  row: 5,  w: 8, h: 4, blocking: false },
+
+    // Sol üst — yatak alanı + komodin + ayna
+    { type: 'bed',          col: 1,  row: 1,  w: 3, h: 3 },
+    { type: 'nightstand',   col: 4,  row: 2,  w: 1, h: 1 },
+    { type: 'curtain',      col: 6,  row: 0,  w: 3, h: 1, blocking: false },
+    { type: 'mirror',       col: 9,  row: 1,  w: 1, h: 2 },
+
+    // Üst sağ — gardırop + üstünde raf
+    { type: 'shelf',        col: 11, row: 1,  w: 3, h: 1 },
+    { type: 'wardrobe',     col: 15, row: 1,  w: 2, h: 3 },
+    { type: 'dresser',      col: 17, row: 1,  w: 2, h: 2 },
+
+    // Orta - sağ odadaki gitar standı
+    { type: 'guitar_stand', col: 17, row: 4,  w: 2, h: 1 },
+
+    // Sol alt — yazı masası ve sandalye (genç asker, mektupları yazmış)
+    { type: 'desk',         col: 1,  row: 8,  w: 3, h: 2 },
+    { type: 'chair',        col: 2,  row: 10, w: 1, h: 1 },
+    { type: 'floor_lamp',   col: 4,  row: 8,  w: 1, h: 2 },
+
+    // Alt sağ — küçük yan masa + bitki
+    { type: 'side_table',   col: 14, row: 9,  w: 2, h: 1 },
+    { type: 'plant',        col: 17, row: 9,  w: 2, h: 2 },
 ];
 
 const objects = [
-    { id: 'letter', col: 5,  row: 3 },  // yatağın yanında, komodine yakın
-    { id: 'toy',    col: 10, row: 8 },  // odanın ortasında, yere düşmüş
-    { id: 'guitar', col: 17, row: 4 },  // dolabın altında duvara yaslı
+    { id: 'letter', col: 4,  row: 3 },   // komodinin önüne düşmüş
+    { id: 'toy',    col: 8,  row: 7 },   // halının üzerinde
+    { id: 'guitar', col: 17, row: 5 },   // gitar standına yaslı
     // Lore Easter egg'leri
-    { id: 'movie_ticket', col: 8,  row: 3 },  // komodinin yakınında, masada bilet
-    { id: 'lore_record',  col: 3,  row: 8 },  // sol alt köşede sessiz pikap
+    { id: 'movie_ticket', col: 12, row: 8 },
+    { id: 'lore_record',  col: 5,  row: 8 },
 ];
 
 export const bedroom = {

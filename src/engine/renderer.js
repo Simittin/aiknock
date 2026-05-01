@@ -546,6 +546,192 @@ function drawFireplace(x, y, w, h) {
     }
 }
 
+function drawChair(x, y, w, h) {
+    // Backrest
+    ctx.fillStyle = PAL.walnut;
+    ctx.fillRect(x + 2, y + 2, w - 4, 4);
+    ctx.fillRect(x + 2, y + 2, 2, h - 4);
+    ctx.fillRect(x + w - 4, y + 2, 2, h - 4);
+    // Seat
+    ctx.fillStyle = PAL.cherry;
+    ctx.fillRect(x + 2, y + h - 8, w - 4, 6);
+    // Cushion
+    ctx.fillStyle = PAL.shawl;
+    ctx.fillRect(x + 3, y + h - 7, w - 6, 4);
+    // Legs hint
+    ctx.fillStyle = PAL.wallBot;
+    ctx.fillRect(x + 3, y + h - 2, 2, 2);
+    ctx.fillRect(x + w - 5, y + h - 2, 2, 2);
+}
+
+function drawDresser(x, y, w, h) {
+    // Body — tall chest of drawers
+    ctx.fillStyle = PAL.walnut;
+    ctx.fillRect(x, y, w, h);
+    // Drawer divisions
+    ctx.fillStyle = PAL.wallBot;
+    const drawerH = Math.floor(h / 3);
+    for (let i = 1; i < 3; i++) {
+        ctx.fillRect(x + 2, y + i * drawerH, w - 4, 1);
+    }
+    // Drawer outline
+    for (let i = 0; i < 3; i++) {
+        ctx.strokeStyle = '#1a0a04';
+        ctx.lineWidth = 0.5;
+        ctx.strokeRect(x + 2, y + i * drawerH + 1, w - 4, drawerH - 2);
+    }
+    // Brass handles per drawer
+    ctx.fillStyle = PAL.brass;
+    for (let i = 0; i < 3; i++) {
+        ctx.fillRect(x + w / 2 - 2, y + i * drawerH + drawerH / 2, 4, 1);
+    }
+    // Top edge highlight
+    ctx.fillStyle = PAL.wallTop;
+    ctx.fillRect(x, y, w, 1);
+}
+
+function drawMirror(x, y, w, h) {
+    // Frame
+    ctx.fillStyle = PAL.walnut;
+    ctx.fillRect(x + 1, y + 1, w - 2, h - 2);
+    // Glass — soft blue gradient
+    const grad = ctx.createLinearGradient(x, y, x, y + h);
+    grad.addColorStop(0, '#5a7a9a');
+    grad.addColorStop(0.5, '#7a9aba');
+    grad.addColorStop(1, '#3a5a7a');
+    ctx.fillStyle = grad;
+    ctx.fillRect(x + 3, y + 3, w - 6, h - 6);
+    // Glass shine
+    ctx.fillStyle = 'rgba(255,255,255,0.25)';
+    ctx.fillRect(x + 5, y + 5, 2, h - 12);
+    // Frame ornament — brass top
+    ctx.fillStyle = PAL.brass;
+    ctx.fillRect(x + w / 2 - 2, y, 4, 2);
+}
+
+function drawFloorLamp(x, y, w, h) {
+    // Base
+    ctx.fillStyle = PAL.wallBot;
+    ctx.fillRect(x + w / 2 - 4, y + h - 3, 8, 3);
+    // Pole
+    ctx.fillStyle = '#3a2a1a';
+    ctx.fillRect(x + w / 2 - 1, y + 6, 2, h - 9);
+    // Shade — warm lampshade
+    ctx.fillStyle = '#a06030';
+    ctx.fillRect(x + 2, y + 2, w - 4, 6);
+    ctx.fillStyle = '#c08040';
+    ctx.fillRect(x + 2, y + 2, w - 4, 1);
+    // Glow
+    ctx.save();
+    ctx.globalCompositeOperation = 'screen';
+    const grad = ctx.createRadialGradient(x + w / 2, y + 5, 2, x + w / 2, y + 5, 24);
+    grad.addColorStop(0, 'rgba(255, 200, 100, 0.45)');
+    grad.addColorStop(1, 'rgba(255, 200, 100, 0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(x - 16, y - 16, w + 32, h + 32);
+    ctx.restore();
+}
+
+function drawTvSet(x, y, w, h) {
+    // 1973 era boxy wood-cased TV
+    ctx.fillStyle = PAL.walnut;
+    ctx.fillRect(x, y, w, h);
+    // Screen bezel
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(x + 3, y + 3, w - 8, h - 12);
+    // Screen — flickering grey
+    const flicker = (Math.sin(Date.now() / 80) + 1) * 0.5;
+    ctx.fillStyle = `rgba(180, 200, 200, ${0.4 + flicker * 0.3})`;
+    ctx.fillRect(x + 5, y + 5, w - 12, h - 16);
+    // Scanline
+    ctx.fillStyle = 'rgba(0,0,0,0.35)';
+    for (let i = 0; i < h - 18; i += 2) {
+        ctx.fillRect(x + 5, y + 5 + i, w - 12, 1);
+    }
+    // Knobs
+    ctx.fillStyle = PAL.brass;
+    ctx.fillRect(x + w - 4, y + h / 2 - 4, 2, 2);
+    ctx.fillRect(x + w - 4, y + h / 2, 2, 2);
+    // Antenna
+    ctx.strokeStyle = '#888';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x + w / 3, y);
+    ctx.lineTo(x + w / 4, y - 8);
+    ctx.moveTo(x + 2 * w / 3, y);
+    ctx.lineTo(x + 3 * w / 4, y - 8);
+    ctx.stroke();
+    // Bottom feet
+    ctx.fillStyle = '#0a0608';
+    ctx.fillRect(x + 2, y + h - 3, 4, 3);
+    ctx.fillRect(x + w - 6, y + h - 3, 4, 3);
+}
+
+function drawShelf(x, y, w, h) {
+    // Wall-mounted shelf with random objects
+    ctx.fillStyle = PAL.walnut;
+    ctx.fillRect(x, y + h - 4, w, 3);
+    ctx.fillStyle = PAL.wallTop;
+    ctx.fillRect(x, y + h - 4, w, 1);
+    // Items on shelf — small bottles, jars, books
+    const colors = ['#5a1a1a', '#1a4a2a', '#a08050', '#7a5a3a', '#3a4a6a'];
+    let bx = x + 2;
+    while (bx < x + w - 3) {
+        const bw = 2 + Math.floor(rand() * 3);
+        const bh = 4 + Math.floor(rand() * 6);
+        ctx.fillStyle = colors[Math.floor(rand() * colors.length)];
+        ctx.fillRect(bx, y + h - 4 - bh, bw, bh);
+        // Highlight
+        ctx.fillStyle = 'rgba(255,255,255,0.15)';
+        ctx.fillRect(bx, y + h - 4 - bh, 1, bh);
+        bx += bw + 1;
+    }
+}
+
+function drawCurtain(x, y, w, h) {
+    // Heavy curtain panels — left and right
+    ctx.fillStyle = '#5a2a3a';
+    ctx.fillRect(x, y, Math.floor(w / 3), h);
+    ctx.fillRect(x + w - Math.floor(w / 3), y, Math.floor(w / 3), h);
+    // Folds
+    ctx.fillStyle = '#3a1a28';
+    for (let i = 0; i < Math.floor(w / 3); i += 3) {
+        ctx.fillRect(x + i, y, 1, h);
+        ctx.fillRect(x + w - Math.floor(w / 3) + i, y, 1, h);
+    }
+    // Rod
+    ctx.fillStyle = PAL.brass;
+    ctx.fillRect(x, y, w, 2);
+}
+
+function drawSafe(x, y, w, h) {
+    // Old metal safe / chest
+    ctx.fillStyle = '#3a3a3a';
+    ctx.fillRect(x, y, w, h);
+    ctx.fillStyle = '#5a5a5a';
+    ctx.fillRect(x + 1, y + 1, w - 2, 2);
+    // Combination dial
+    ctx.fillStyle = PAL.brass;
+    const cx = x + w / 2;
+    const cy = y + h / 2;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#1a1a1a';
+    ctx.beginPath();
+    ctx.arc(cx, cy, 2, 0, Math.PI * 2);
+    ctx.fill();
+    // Handle
+    ctx.fillStyle = PAL.brassDim;
+    ctx.fillRect(cx + 5, cy - 1, 4, 2);
+    // Rivets
+    ctx.fillStyle = '#222';
+    ctx.fillRect(x + 2, y + 2, 1, 1);
+    ctx.fillRect(x + w - 3, y + 2, 1, 1);
+    ctx.fillRect(x + 2, y + h - 3, 1, 1);
+    ctx.fillRect(x + w - 3, y + h - 3, 1, 1);
+}
+
 function drawFurniture(furniture) {
     if (!furniture) return;
     for (const f of furniture) {
@@ -555,14 +741,14 @@ function drawFurniture(furniture) {
         const py = f.row * TILE;
         const pw = f.w * TILE;
         const ph = f.h * TILE;
-        
+
         if (f.type !== 'rug') {
             ctx.shadowColor = 'rgba(0,0,0,0.5)';
             ctx.shadowBlur = 5;
             ctx.shadowOffsetX = 2;
             ctx.shadowOffsetY = 2;
         }
-        
+
         switch (f.type) {
             case 'bed': drawBed(px, py, pw, ph); break;
             case 'nightstand': drawNightstand(px, py, pw, ph); break;
@@ -579,6 +765,14 @@ function drawFurniture(furniture) {
             case 'side_table': drawSideTable(px, py, pw, ph); break;
             case 'guitar_stand': drawGuitarStand(px, py, pw, ph); break;
             case 'plant': drawPlant(px, py, pw, ph); break;
+            case 'chair': drawChair(px, py, pw, ph); break;
+            case 'dresser': drawDresser(px, py, pw, ph); break;
+            case 'mirror': drawMirror(px, py, pw, ph); break;
+            case 'floor_lamp': drawFloorLamp(px, py, pw, ph); break;
+            case 'tv_set': drawTvSet(px, py, pw, ph); break;
+            case 'shelf': drawShelf(px, py, pw, ph); break;
+            case 'curtain': drawCurtain(px, py, pw, ph); break;
+            case 'safe': drawSafe(px, py, pw, ph); break;
         }
         ctx.restore();
     }
