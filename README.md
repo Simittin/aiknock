@@ -55,6 +55,20 @@ npm run preview
 
 Tarayıcıda `http://localhost:5173` adresini ziyaret edin.
 
+## Proje Yapısı
+
+```text
+src/
+  ai/       Gemini bağlantısı, prompt üretimi ve duygu analizi
+  assets/   Pixel sprite ve görsel varlık tanımları
+  audio/    Yağmur, drone ve final müziği sistemleri
+  engine/   Oyun döngüsü, çizim, çarpışma ve giriş yönetimi
+  objects/  Etkileşimli nesne tanımları
+  rooms/    Oda planları ve geçişleri
+  state/    Oyuncu profili, skor ve ruhsal yük durumu
+  ui/       Intro, diyalog, isim girişi ve final arayüzleri
+```
+
 ## Lisans
 
 Bu proje Introduction to AI dersi kapsamında geliştirilmiştir.
