@@ -15,7 +15,7 @@ export const FLOOR    = 0;
 export const WALL     = 1;
 export const DOOR_R   = 2;
 export const DOOR_L   = 3;
-export const DOOR_OUT = 4;  // Heaven's Door — finale tetikleyici
+export const DOOR_OUT = 4;  // Heaven's Door - finale tetikleyici
 
 // Oyuncu
 export const PLAYER_SIZE  = 12;   // çarpışma kutusu (sprite 14, 1px boşluk her yan)
@@ -25,7 +25,7 @@ export const PLAYER_SPEED = 1.0;  // px/frame (native, 16px tile)
 // Animasyon
 export const WALK_TICKS = 7;      // her N tick'te bir kare değiştir
 
-// Tema paleti — dusty western + folk melankoli karışımı
+// Tema paleti - dusty western + folk melankoli karışımı
 export const PAL = {
     bg:        '#0a0708',
     floorA:    '#5a3a1e',
