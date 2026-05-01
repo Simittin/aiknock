@@ -25,15 +25,32 @@
 3. `.env` dosyasını oluşturun ve Gemini API anahtarınızı ekleyin:
    ```bash
    cp .env.example .env
-   # .env dosyasını açın ve GEMINI_API_KEY kısmını doldurun
    ```
 
-## Çalıştırma
+   `.env` dosyasında Vite'ın tarayıcıya aktarabileceği değişken adı kullanılmalıdır:
+
+   ```env
+   VITE_GEMINI_API_KEY=your_api_key_here
+   ```
+
+## Geliştirme Komutları
 
 Geliştirme sunucusunu başlatmak için:
 
 ```bash
 npm run dev
+```
+
+Production build almak için:
+
+```bash
+npm run build
+```
+
+Build çıktısını yerelde önizlemek için:
+
+```bash
+npm run preview
 ```
 
 Tarayıcıda `http://localhost:5173` adresini ziyaret edin.
