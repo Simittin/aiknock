@@ -123,25 +123,31 @@ function createProceduralEnding(ctx, masterGain, isHeavy) {
     const nodes = [];
 
     // --- Akustik Gitar Simülasyonu (Karplus-Strong benzeri) ---
-    // Her akor için filtrelenmiş noise burst + rezonant filtre
+    // Bob Dylan, "Knockin' on Heaven's Door" (1973), G majör.
+    // Asıl akor progresyonu: G - D - Am7 - G - D - C  (verse + chorus aynı)
+    //
+    // Light (huzurlu): orijinal majör progresyon, normal tempo
+    // Heavy (ağır): Am köküne kayan, sürünen tempo, minör his
 
-    // Akor progresyonu — Am → G → F → Am (Knockin' on Heaven's Door)
-    // Light: Am → C → G → F (huzurlu)
-    // Heavy: Am → Dm → E7 → Am (gerilimli)
+    // Frekanslar — root nota (A=440 standardı)
+    // G3=196, A3=220, B3=246.94, C4=261.63, D4=293.66, E4=329.63
     const lightChords = [
-        { freq: 220, dur: 3.5 },   // Am
-        { freq: 261, dur: 3.5 },   // C
-        { freq: 196, dur: 3.5 },   // G
-        { freq: 174, dur: 3.5 },   // F
+        { name: 'G',   freq: 196.00, dur: 3.0 },
+        { name: 'D',   freq: 293.66, dur: 3.0 },
+        { name: 'Am7', freq: 220.00, dur: 3.0 },
+        { name: 'G',   freq: 196.00, dur: 3.0 },
+        { name: 'D',   freq: 293.66, dur: 3.0 },
+        { name: 'C',   freq: 261.63, dur: 3.0 },
     ];
+    // Heavy: Am7 ekseninde daha karanlık, tempoyu sürükleyen versiyon
     const heavyChords = [
-        { freq: 220, dur: 4.0 },   // Am
-        { freq: 146, dur: 4.0 },   // Dm (daha aşağı)
-        { freq: 164, dur: 4.0 },   // E (minör his)
-        { freq: 220, dur: 4.0 },   // Am (döngü)
+        { name: 'Am7', freq: 220.00, dur: 4.5 },
+        { name: 'Em',  freq: 164.81, dur: 4.5 },
+        { name: 'D',   freq: 146.83, dur: 4.5 }, // alt oktav D — daha çukur
+        { name: 'Am7', freq: 220.00, dur: 4.5 },
     ];
     const chords = isHeavy ? heavyChords : lightChords;
-    const tempo = isHeavy ? 0.55 : 0.7; // heavy daha yavaş
+    const tempo = isHeavy ? 0.55 : 0.85; // heavy belirgin yavaş
 
     // Reverb impulse — daha geniş ve belirgin
     const reverbLen = 4;
@@ -224,16 +230,31 @@ function createProceduralEnding(ctx, masterGain, isHeavy) {
     }
 
     // --- Harmonika / Melodica simülasyonu ---
-    // Tek bir melodi hattı — osilator + vibrato — uzun süre boyunca tekrar eder
-    const melodyPhrase1 = isHeavy
-        ? [220, 196, 174, 164, 146, 164, 174, 196]
-        : [330, 392, 440, 494, 523, 494, 440, 392];
-    const melodyPhrase2 = isHeavy
-        ? [220, 196, 174, 146, 130, 146, 164, 196]
-        : [330, 349, 392, 440, 523, 494, 440, 330];
-    // İki farklı cümleyi birleştirip tekrar et — tüm süreyi kapla
-    const fullMelody = [...melodyPhrase1, ...melodyPhrase2, ...melodyPhrase1, ...melodyPhrase2];
-    const noteLen = isHeavy ? 1.6 : 1.35;
+    // Knockin' on Heaven's Door'un ikonik vokal hattı:
+    //   "Mama take this badge off of me"   → D-D-D-D-C-B-A-G  (G major'da inişli)
+    //   "I can't use it anymore"           → D-C-B-A-G
+    //   "I feel I'm knockin' on heaven's door" → G-A-B-C-D-D-C-B-A-G  (yükselip iniyor)
+    //
+    // Frekanslar (oktav 4-5):
+    //   G4=392, A4=440, B4=493.88, C5=523.25, D5=587.33
+    //   Heavy modda alt oktav + minör tonlar: A3=220, B3=246.94, C4=261.63, D4=293.66, E4=329.63
+
+    // LIGHT (G major, descending melancholic-but-peaceful)
+    const lightPhrase1 = [587, 587, 523, 494, 440, 392, 392, 440]; // "mama take this badge off of me"
+    const lightPhrase2 = [440, 494, 523, 587, 523, 494, 440, 392]; // "i can't use it anymore"
+    const lightPhrase3 = [392, 440, 494, 523, 587, 587, 523, 494]; // "i feel i'm knockin' on..."
+    const lightPhrase4 = [440, 392, 392, 0,   587, 523, 494, 440]; // "...heaven's door" (0=rest)
+
+    // HEAVY (Am tonal merkezi, minör his — alt oktav, daha karanlık)
+    const heavyPhrase1 = [440, 440, 392, 349, 330, 294, 294, 330]; // descending in Am
+    const heavyPhrase2 = [330, 349, 392, 440, 392, 349, 330, 294]; // arch then fall
+    const heavyPhrase3 = [220, 247, 261, 294, 330, 294, 261, 247]; // alt oktava iniş
+    const heavyPhrase4 = [294, 261, 247, 220, 220, 247, 261, 294]; // bottom roll
+
+    const fullMelody = isHeavy
+        ? [...heavyPhrase1, ...heavyPhrase2, ...heavyPhrase3, ...heavyPhrase4]
+        : [...lightPhrase1, ...lightPhrase2, ...lightPhrase3, ...lightPhrase4];
+    const noteLen = isHeavy ? 1.7 : 1.35;
     const melodyStart = t + 4; // 4sn sonra gir
     const melodyGain = ctx.createGain();
     melodyGain.gain.value = isHeavy ? 0.16 : 0.20;
@@ -244,11 +265,15 @@ function createProceduralEnding(ctx, masterGain, isHeavy) {
         const noteTime = melodyStart + i * noteLen;
         if (noteTime >= t + duration - 3) break;
 
+        const freq = fullMelody[i];
+        // Sıfır = sus (rest) — orijinal şarkıdaki es noktaları
+        if (freq === 0) continue;
+
         const osc = ctx.createOscillator();
         osc.type = 'sine';
-        osc.frequency.value = fullMelody[i];
+        osc.frequency.value = freq;
 
-        // Vibrato
+        // Vibrato — harmonika hissi
         const vib = ctx.createOscillator();
         vib.frequency.value = isHeavy ? 3.5 : 5.0;
         const vibGain = ctx.createGain();
@@ -259,7 +284,7 @@ function createProceduralEnding(ctx, masterGain, isHeavy) {
 
         const bp = ctx.createBiquadFilter();
         bp.type = 'bandpass';
-        bp.frequency.value = fullMelody[i] * 2;
+        bp.frequency.value = freq * 2;
         bp.Q.value = 2.5;
 
         const env = ctx.createGain();
