@@ -11,6 +11,7 @@ import { onSentimentState } from './ai/sentiment.js';
 import * as Audio from './audio/audio.js';
 import { generateEndingMusic, resetEndingMusic } from './audio/ending-music.js';
 
+// Finale ilerlemesini belirleyen toplam etkileşimli yansıma sayısı.
 const TOTAL_OBJECTS = 8;
 const BURDEN_LOW_MAX = 30;
 const BURDEN_HIGH_MIN = 70;
@@ -41,6 +42,10 @@ function getBurdenColor(score) {
     return BURDEN_COLORS.high;
 }
 
+function formatProgressText(done, score) {
+    return `YANSIMALAR: ${done}/${TOTAL_OBJECTS}     PUAN: ${score}`;
+}
+
 function paintBurden(score) {
     burdenScoreEl.textContent = String(score);
     burdenFillEl.style.width = `${score}%`;
@@ -64,7 +69,7 @@ async function checkApiKey() {
 function paintProgress() {
     const done = getCompletedCount();
     const total = getTotalScore();
-    hudProgress.textContent = `YANSIMALAR: ${done}/${TOTAL_OBJECTS}     PUAN: ${total}`;
+    hudProgress.textContent = formatProgressText(done, total);
 
     // ─── Pre-fetch: Son nesne etkileşimine 1 kala müzik üretimini başlat ───
     // Oyuncu TOTAL_OBJECTS - 1 nesneyi tamamladığında tetiklenir.
