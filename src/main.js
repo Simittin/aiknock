@@ -20,6 +20,7 @@ const BURDEN_COLORS = {
     medium: '#FF5722',
     high: '#8B0000',
 };
+const API_KEY_PLACEHOLDER = 'YOUR_API_KEY_HERE';
 
 let endingMusicTriggered = false;
 
@@ -58,12 +59,16 @@ function paintBurden(score) {
     lastBurdenSeen = score;
 }
 
+function isMissingApiKey(key) {
+    return !key || key === API_KEY_PLACEHOLDER;
+}
+
 async function checkApiKey() {
     const key = await getApiKey();
-    if (!key || key === 'YOUR_API_KEY_HERE') {
-        const banner = document.getElementById('api-warning');
-        if (banner) banner.classList.remove('hidden');
-    }
+    if (!isMissingApiKey(key)) return;
+
+    const warningBanner = document.getElementById('api-warning');
+    if (warningBanner) warningBanner.classList.remove('hidden');
 }
 
 function paintProgress() {
