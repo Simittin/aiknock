@@ -12,6 +12,14 @@ import * as Audio from './audio/audio.js';
 import { generateEndingMusic, resetEndingMusic } from './audio/ending-music.js';
 
 const TOTAL_OBJECTS = 8;
+const BURDEN_LOW_MAX = 30;
+const BURDEN_HIGH_MIN = 70;
+const BURDEN_COLORS = {
+    low: '#FFB000',
+    medium: '#FF5722',
+    high: '#8B0000',
+};
+
 let endingMusicTriggered = false;
 
 const canvas    = document.getElementById('game-canvas');
@@ -27,19 +35,18 @@ const modelProgressFill   = document.getElementById('model-progress-fill');
 const modelProgressPct    = document.getElementById('model-progress-pct');
 
 let lastBurdenSeen = 0;
+function getBurdenColor(score) {
+    if (score <= BURDEN_LOW_MAX) return BURDEN_COLORS.low;
+    if (score <= BURDEN_HIGH_MIN) return BURDEN_COLORS.medium;
+    return BURDEN_COLORS.high;
+}
+
 function paintBurden(score) {
     burdenScoreEl.textContent = String(score);
     burdenFillEl.style.width = `${score}%`;
+    burdenFillEl.style.background = getBurdenColor(score);
     
-    if (score <= 30) {
-        burdenFillEl.style.background = '#FFB000';
-    } else if (score <= 70) {
-        burdenFillEl.style.background = '#FF5722';
-    } else {
-        burdenFillEl.style.background = '#8B0000';
-    }
-    
-    document.body.classList.toggle('high-burden', score >= 70);
+    document.body.classList.toggle('high-burden', score >= BURDEN_HIGH_MIN);
     // Ses hook'ları: drone burden'a göre kararsızlaşır, ani sıçrama varsa kalp atışı
     Audio.setDroneBurden(score);
     if (score - lastBurdenSeen >= 7) Audio.playBurdenSpike();
