@@ -13,10 +13,10 @@
             <div id="header">
                 <h1>1973: VEDA YOLU</h1>
                 <div id="hud">
-                    <span id="hud-player">ASKER: —</span>
-                    <span id="hud-room">KONUM: —</span>
+                    <span id="hud-player">ASKER: -</span>
+                    <span id="hud-room">KONUM: -</span>
                     <span id="hud-progress">YANSIMALAR: 0/7</span>
-                    <span id="hud-controls">[WASD] HAREKET [E] İNCELE</span>
+                    <span id="hud-controls">[WASD] HAREKET | [E] İNCELE</span>
                 </div>
                 <div id="burden-bar-wrapper">
                     <span class="bar-label">RUHSAL YÜK</span>
@@ -30,7 +30,7 @@
             <canvas id="game-canvas" tabindex="0"></canvas>
 
             <div id="api-warning" class="hidden">
-                ! VITE_GEMINI_API_KEY tanımlı değil — .env içine VITE_GEMINI_API_KEY=... ekleyip yenile.
+                ! VITE_GEMINI_API_KEY tanımlı değil - .env içine VITE_GEMINI_API_KEY=... ekleyip yenile.
             </div>
 
             <div id="finale-locked"></div>
@@ -60,7 +60,7 @@
                         dileğiyle.</p>
                 </div>
 
-                <div class="cr-divider">— ◆ —</div>
+                <div class="cr-divider">- ◆ -</div>
 
                 <div class="cr-section">
                     <h3 class="cr-role">YAPIM &amp; YÖNETİM</h3>
@@ -108,15 +108,15 @@
                     <p class="cr-name">Transformers.js</p>
                 </div>
 
-                <div class="cr-divider">— ◆ —</div>
+                <div class="cr-divider">- ◆ -</div>
 
                 <div class="cr-section">
                     <h3 class="cr-role">ÖZEL TEŞEKKÜR</h3>
                     <p class="cr-tribute">Bob Dylan</p>
-                    <p class="cr-tribute-sub">"Knockin' on Heaven's Door" — 1973</p>
+                    <p class="cr-tribute-sub">"Knockin' on Heaven's Door" - 1973</p>
                 </div>
 
-                <div class="cr-divider">— ◆ —</div>
+                <div class="cr-divider">- ◆ -</div>
 
                 <div class="cr-section cr-final">
                     <p class="cr-tagline">1973 ◆ VEDA YOLU</p>
@@ -127,14 +127,14 @@
 
         <div id="dialog-overlay" class="hidden">
             <div id="dialog-box">
-                <div id="dialog-title">—</div>
+                <div id="dialog-title">-</div>
                 <div id="dialog-text"></div>
                 <div id="dialog-input-area">
                     <span class="prompt-symbol">&gt;</span>
                     <input id="dialog-input" type="text" autocomplete="off" spellcheck="false"
                         placeholder="ne hissediyorsun?">
                 </div>
-                <div id="dialog-hint">[ENTER] GÖNDER [ESC] AYRIL</div>
+                <div id="dialog-hint">[ENTER] GÖNDER | [ESC] AYRIL</div>
             </div>
         </div>
 
@@ -142,13 +142,13 @@
             <div id="intro-box">
                 <div id="intro-header">
                     <span id="intro-title">1973 &nbsp;▪&nbsp; VEDA YOLU</span>
-                    <span id="intro-subtitle">ASKER: —</span>
+                    <span id="intro-subtitle">ASKER: -</span>
                 </div>
 
                 <div id="intro-body"></div>
 
                 <div id="intro-after">
-                    <div class="intro-divider">— KONTROLLER —</div>
+                    <div class="intro-divider">- KONTROLLER -</div>
                     <div class="ctrl-grid">
                         <div class="ctrl-row">
                             <span class="keys"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span>
@@ -172,7 +172,7 @@
                         </div>
                     </div>
 
-                    <div class="intro-divider">— RUHSAL YÜK —</div>
+                    <div class="intro-divider">- RUHSAL YÜK -</div>
                     <div id="burden-demo">
                         <div class="demo-bar">
                             <div class="demo-fill"></div>
@@ -191,7 +191,7 @@
         <div id="name-overlay" class="hidden">
             <div id="name-box">
                 <p class="name-line">&gt; ABD SAVUNMA BAKANLIĞI</p>
-                <p class="name-line">&gt; CELP KAYIT SİSTEMİ — 1973</p>
+                <p class="name-line">&gt; CELP KAYIT SİSTEMİ - 1973</p>
                 <p class="name-line dim">&gt; DOSYA ONAYI BEKLENİYOR. ER STATÜSÜNÜ DOĞRULA.</p>
                 <label for="name-input" class="name-label">ADIN:</label>
                 <div class="name-row">
@@ -215,7 +215,7 @@
     </div>
 
     <script>
-        // Her sayfa yenilemesinde sıfırlama — modül yüklenmeden önce çalışır
+        // Her sayfa yenilemesinde sıfırlama - modül yüklenmeden önce çalışır
         ['knock.playerName', 'knock.burdenScore', 'knock.scores'].forEach((k) => localStorage.removeItem(k));
     </script>
     <script type="module" src="src/main.js"></script>
