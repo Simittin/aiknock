@@ -16,13 +16,27 @@ kabullenme, geri dönüşsüz bir kapıya yaklaşma. Yıl 1973, Vietnam savaşı
 - reply'ı tırnak içine alma; sadece konuşma metni yaz.
 `;
 
-function qaInstructions(target, answered) {
+function qaInstructions(target, answered, qaType) {
     const remaining = Math.max(0, target - answered);
     const isOpening = answered === 0;
     const isLast    = answered + 1 === target;
     const isClosing = answered >= target;
+
+    // Tip zorlaması — pattern'a göre AÇIK UÇLU mu yoksa ŞIKLI mı belirlenir
+    let typeRule = '';
+    if (!isClosing) {
+        if (qaType === 'choice') {
+            typeRule = `BU TUR ÇOKTAN SEÇMELİ — choices alanına TAM 3 SEÇENEK koy.
+   Her seçenek 3-8 kelime, farklı bir DURUŞU temsil etmeli (örn: "kabullenmiş", "kaçan", "başkaldıran").
+   Her seçeneğin label alanına o duruşun etiketini yaz.`;
+        } else {
+            typeRule = `BU TUR AÇIK UÇLU — choices alanını ASLA gönderme (boş/null bırak).
+   Oyuncu kendi cümlesini yazsın; içsel yansımayı tetikleyen bir soru sor.`;
+        }
+    }
+
     return `
-Q&A KURALLARI (toplam ${target} soru sorulacak, ${answered} cevap geldi):
+Q&A KURALLARI (toplam ${target} soru, ${answered} cevap geldi):
 - reply: kısa konuşma metni (1-2 cümle), içinde ${isClosing ? 'KAPANIŞ — soru SORMA' : 'BİR SORU sor'}.
 - score: kullanıcının az önceki cevabının 0-10 puanı (felsefi derinlik, dürüstlük, şarkı temasıyla rezonans). ${isOpening ? 'BU TURDA score=null bırak (henüz cevap yok).' : 'Sayı olarak ver.'}
 - label: cevabın tek kelime/kısa etiketi: "kabullenmiş", "kaçışta", "kırılgan", "defiance", "alaycı", "yorgun", "içten", "kayıp" gibi. ${isOpening ? 'Bu turda label boş bırakılabilir.' : 'Kısa bir etiket ver.'}
@@ -34,11 +48,11 @@ PUAN REHBERİ:
 - 3-5: kaçışta, klişe, savunmacı
 - 0-2: alaycı, troll, ilgisiz
 
-ŞIK MEKANİĞİ — DİKKATLİ OKU:
-- Çoğunlukla AÇIK UÇLU (choices: null) sorular sor ki oyuncu kendi metnini yazabilsin.
-- SADECE oyuncuyu köşeye sıkıştırmak istediğin çok kritik anlarda (örneğin kimlik seçimi yapması gerektiğinde) "choices" alanına TAM 3 seçenek koy (her biri 3-8 kelime).
-- Bir önceki turda oyuncu sana KENDİ CÜMLESİNİ yazdıysa, BİR SONRAKİ YANITINDA mutlaka onun ne dediğini anladığını hissettir, yorumla, sonra yeni sorunu sor!
-- Sürekli şıklı soru sorma! Açık uçlu diyalog ana hedeftir.
+SORU TİPİ ZORLAMASI (kuralı çiğneme):
+${typeRule}
+
+NOT: Bir önceki turda oyuncu yazılı cevap verdiyse, yeni soruna geçmeden ÖNCE
+onun ne dediğini anladığını kısacık (1 yarım cümle) hissettir, sonra yeni sorunu sor.
 
 ${isClosing
     ? 'Bu son turdur. Sadece kapanış cümlesi yaz, soru sorma, is_final=true.'
@@ -48,7 +62,14 @@ ${isClosing
 `;
 }
 
+function pickType(objectDef, answeredCount) {
+    const pat = objectDef?.qaPattern;
+    if (!pat || answeredCount >= pat.length) return 'open';
+    return pat[answeredCount];
+}
+
 export function buildInnerVoicePrompt({ objectDef, playerName, burden, answeredCount, target }) {
+    const qaType = pickType(objectDef, answeredCount);
     return `
 Sen oyuncunun ZİHNİNİN SESİsin. Karakter şu an şu nesneye bakıyor:
 
@@ -61,11 +82,12 @@ Karakterin ruhsal yükü: ${burden}/100 (yüksek = çökmüş, kırık; düşük
 Karaktere "sen" diyerek bir iç yansıma olarak konuş. Onun söylediğini
 yumuşatma, ama yargılama da. Felsefi soru sor — onu kendi vicdanıyla yüzleştir.
 ${SHARED_RULES}
-${qaInstructions(target, answeredCount)}
+${qaInstructions(target, answeredCount, qaType)}
 `.trim();
 }
 
-export function buildMomPrompt({ playerName, burden, answeredCount, target }) {
+export function buildMomPrompt({ objectDef, playerName, burden, answeredCount, target }) {
+    const qaType = pickType(objectDef, answeredCount);
     return `
 SEN ANNEsin. 1973 Amerika, küçük bir kasaba evi, mutfaktasın. Oğlun ${playerName}
 biraz sonra Vietnam'a gidecek. Şu an ona veda ediyorsun. Sen sadece bir
@@ -86,7 +108,7 @@ maskesini görüyorsun.
 Sorular bir annenin sorularıdır: küçük şeyler, korkular, bir söz almak için.
 "Ne hatırlıyorsun benden?" — "Korkuyor musun?" — "Bana söz verir misin?" gibi.
 ${SHARED_RULES}
-${qaInstructions(target, answeredCount)}
+${qaInstructions(target, answeredCount, qaType)}
 `.trim();
 }
 

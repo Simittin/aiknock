@@ -4,6 +4,9 @@
 // gösterilen sahne kuran tek satırlık metin (AI çağrısından önce).
 
 export const objects = {
+    // qaPattern: her turun tipi (open=açık uçlu, choice=3 şıklı).
+    // 8 nesne × 3 tur = 24 tur. 4 nesne O-C-O, 4 nesne C-O-C → tam 12 açık + 12 şıklı.
+
     letter: {
         id: 'letter',
         name: 'Askerlik Celbi',
@@ -11,6 +14,7 @@ export const objects = {
         blocking: true,
         role: 'inner_voice',
         questionTarget: 3,
+        qaPattern: ['open', 'choice', 'open'],
         opener: "Beyaz zarftan siyah mürekkep akıyor — sanki kâğıt kanıyor.",
         context: "Karakter elinde Vietnam askerlik celbini tutuyor. Geri dönüşsüz bir emir. Bu mektup, çocukluğunu kapatan ve onu cennetin kapısına yönlendiren ilk dokunuş."
     },
@@ -21,6 +25,7 @@ export const objects = {
         blocking: true,
         role: 'inner_voice',
         questionTarget: 3,
+        qaPattern: ['choice', 'open', 'choice'],
         opener: "Tüyleri yıpranmış, gözleri matlaşmış bir oyuncak ayı yerde duruyor.",
         context: "Karakterin çocukken her gece kucakladığı oyuncak ayı. Geride bırakılan masumiyetin somut hali. Onu ardında bırakacak."
     },
@@ -31,6 +36,7 @@ export const objects = {
         blocking: true,
         role: 'inner_voice',
         questionTarget: 3,
+        qaPattern: ['open', 'choice', 'open'],
         opener: "Tellerden biri kopmuş. Tahtasında çalınmamış şarkıların izi var.",
         context: "Karakterin sanatçı kimliği, yaşamadığı bir kariyer, çalmadığı şarkılar. Belki başka bir hayatta o, savaşçı değil, müzisyen olurdu. Bu gitar, kaybolmuş bir gelecektir."
     },
@@ -41,6 +47,7 @@ export const objects = {
         blocking: true,
         role: 'inner_voice',
         questionTarget: 3,
+        qaPattern: ['choice', 'open', 'choice'],
         opener: "Babanın silahı duvarda asılı. Ağırlığı havayı çökertiyor.",
         context: "Babadan kalma eski tüfek. Şarkının 'put my guns in the ground' satırına dokunan nesne. Silah, hem mirası hem de ona biçilen rolü temsil eder."
     },
@@ -51,6 +58,7 @@ export const objects = {
         blocking: true,
         role: 'inner_voice',
         questionTarget: 3,
+        qaPattern: ['open', 'choice', 'open'],
         opener: "Masada soğuk bir parıltı. Üzerinde sırtlanması gereken bir isim.",
         context: "Pirinçten yıldız rozet. Şarkının 'take this badge off of me' satırının somut karşılığı. Karakter bu rozeti üzerinde taşımak zorunda — ama içten içe atmak ister."
     },
@@ -61,6 +69,7 @@ export const objects = {
         blocking: true,
         role: 'inner_voice',
         questionTarget: 3,
+        qaPattern: ['open', 'choice', 'open'],
         opener: "Camda fırtına. Ufukta o uzun, kara bulut iniyor.",
         context: "Mutfak penceresinin önünde dururken dışarıdaki fırtınayı izliyor. 'That long black cloud is comin' down' satırının görsel karşılığı. Gökyüzü adeta bir kapı gibi çalınıyor."
     },
@@ -70,7 +79,8 @@ export const objects = {
         kind: 'npc',
         blocking: true,
         role: 'mom',
-        questionTarget: 6,
+        questionTarget: 3,
+        qaPattern: ['choice', 'open', 'choice'],
         opener: "Annen masada oturuyor. Elleri dizinde, gözleri seninle.",
         context: "Final veda sahnesi. Anne henüz konuşmadı; oğlunu süzüyor."
     },
@@ -81,6 +91,7 @@ export const objects = {
         blocking: true,
         role: 'inner_voice',
         questionTarget: 3,
+        qaPattern: ['choice', 'open', 'choice'],
         opener: "Pikabın iğnesi cızırtıyla iniyor. Bob Dylan'ın sesi odayı dolduruyor.",
         context: "Pikabın üzerinde 1973 yapımı 'Knockin' on Heaven's Door' plağı dönüyor. Şarkının melankolisi, karakterin gitme zorunluluğuyla birleşiyor. Müzik ona kaçmak istediği her şeyi hatırlatıyor."
     },
