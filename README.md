@@ -31,6 +31,7 @@
 ## Çalıştırma
 
 Geliştirme sunucusunu başlatmak için:
+
 ```bash
 npm run dev
 ```
