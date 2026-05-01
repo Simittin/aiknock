@@ -50,9 +50,9 @@ function paintBurden(score) {
     burdenScoreEl.textContent = String(score);
     burdenFillEl.style.width = `${score}%`;
     burdenFillEl.style.background = getBurdenColor(score);
-    
+
     document.body.classList.toggle('high-burden', score >= BURDEN_HIGH_MIN);
-    // Ses hook'ları: drone burden'a göre kararsızlaşır, ani sıçrama varsa kalp atışı
+    // Ses hook'ları: drone burden'a göre kararsızlaşır, ani sıçrama varsa kalp atışı.
     Audio.setDroneBurden(score);
     if (score - lastBurdenSeen >= 7) Audio.playBurdenSpike();
     lastBurdenSeen = score;
@@ -71,16 +71,16 @@ function paintProgress() {
     const total = getTotalScore();
     hudProgress.textContent = formatProgressText(done, total);
 
-    // ─── Pre-fetch: Son nesne etkileşimine 1 kala müzik üretimini başlat ───
+    // Pre-fetch: Son nesne etkileşimine 1 kala müzik üretimini başlat.
     // Oyuncu TOTAL_OBJECTS - 1 nesneyi tamamladığında tetiklenir.
-    // generateEndingMusic kendi içinde cache/threshold kontrolü yapar —
+    // generateEndingMusic kendi içinde cache/threshold kontrolü yapar;
     // aynı eşik ile tekrar çağrılırsa gereksiz üretim yapmaz.
     if (done >= TOTAL_OBJECTS - 1) {
         const currentBurden = getBurden();
         window._lastBurdenForMusic = currentBurden;
         if (!endingMusicTriggered) {
             endingMusicTriggered = true;
-            console.log(`[main] Ending müzik pre-fetch tetiklendi — burden: ${currentBurden}, tamamlanan: ${done}/${TOTAL_OBJECTS}`);
+            console.log(`[main] Ending müzik pre-fetch tetiklendi - burden: ${currentBurden}, tamamlanan: ${done}/${TOTAL_OBJECTS}`);
         }
         generateEndingMusic(currentBurden).catch((err) => {
             console.warn('[main] Ending müzik üretim hatası:', err);
@@ -102,14 +102,14 @@ onSentimentState((state) => {
 });
 
 async function boot() {
-    // Her sayfa yenilemesinde temiz başla — kalıcılık devre dışı
+    // Her sayfa yenilemesinde temiz başla - kalıcılık devre dışı.
     clearProfile();
     resetBurden();
     resetScores();
     resetEndingMusic();
     endingMusicTriggered = false;
 
-    // Oyun motoru intro tamamlanana kadar gizli — sadece modal görünür
+    // Oyun motoru intro tamamlanana kadar gizli - sadece modal görünür.
     gameContainer.classList.add('pre-intro');
 
     onBurdenChange(paintBurden);
@@ -117,20 +117,20 @@ async function boot() {
     onScoresChange(paintProgress);
     paintProgress();
 
-    // 1. Önce yalnızca isim kutucuğu
+    // 1. Önce yalnızca isim kutucuğu.
     await askPlayerName();
     hudPlayer.textContent = `ASKER: ${getPlayerName().toUpperCase()}`;
     clearPendingKeys();
     checkApiKey();
 
-    // 2. Sonra yalnızca hikâye + kontroller
+    // 2. Sonra yalnızca hikaye + kontroller.
     await showIntro(getPlayerName());
     clearPendingKeys();
 
-    // 3. Şimdi oyun ekranı belirir
+    // 3. Şimdi oyun ekranı belirir.
     gameContainer.classList.remove('pre-intro');
 
-    // Ses motorunu başlat — intro space gesture'ı user gesture sayılır
+    // Ses motorunu başlat - intro space gesture'ı user gesture sayılır.
     Audio.start();
     Audio.startRain(0.4);
     Audio.startDrone();
@@ -139,7 +139,7 @@ async function boot() {
         startRoom: 'bedroom',
         onRoomChange: (room) => {
             hudRoom.textContent = `KONUM: ${room.name.toUpperCase()}`;
-            // Mutfakta pencere yakın — yağmur sesi güçlenir
+            // Mutfakta pencere yakın - yağmur sesi güçlenir.
             Audio.setRainIntensity(room.id === 'kitchen' ? 0.75 : 0.4);
         },
     });
@@ -150,7 +150,7 @@ async function boot() {
 boot();
 
 // --- DEV CHEAT (API'siz finale testi için) ---
-// Console'da: cheat.lightEnd()  veya  cheat.heavyEnd()
+// Console'da: cheat.lightEnd() veya cheat.heavyEnd()
 // Sonra oturma odasının üst duvarındaki Cennetin Kapısı'na yürü, E'ye bas.
 const OBJECT_IDS = ['letter', 'toy', 'guitar', 'gun', 'badge', 'window', 'mom', 'record_player'];
 window.cheat = {
@@ -159,21 +159,21 @@ window.cheat = {
     lightEnd()    {
         OBJECT_IDS.forEach((id) => markCompleted(id));
         setBurden(20);
-        // Önceki cache'i sıfırla ve yeniden üret
+        // Önceki cache'i sıfırla ve yeniden üret.
         resetEndingMusic();
         endingMusicTriggered = true;
         window._lastBurdenForMusic = 20;
         generateEndingMusic(20).catch(() => {});
-        console.log('OK — kapıya yürü, E ile aç. burden=20 (LIGHT) + ending müzik üretiliyor…');
+        console.log('OK - kapıya yürü, E ile aç. burden=20 (LIGHT) + ending müzik üretiliyor...');
     },
     heavyEnd()    {
         OBJECT_IDS.forEach((id) => markCompleted(id));
         setBurden(80);
-        // Önceki cache'i sıfırla ve yeniden üret
+        // Önceki cache'i sıfırla ve yeniden üret.
         resetEndingMusic();
         endingMusicTriggered = true;
         window._lastBurdenForMusic = 80;
         generateEndingMusic(80).catch(() => {});
-        console.log('OK — kapıya yürü, E ile aç. burden=80 (HEAVY) + ending müzik üretiliyor…');
+        console.log('OK - kapıya yürü, E ile aç. burden=80 (HEAVY) + ending müzik üretiliyor...');
     },
 };
