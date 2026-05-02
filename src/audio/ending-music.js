@@ -35,14 +35,18 @@ let cachedThreshold = null;     // Son üretimde kullanılan eşik ('light' | 'h
 // Global erişim — finale.js okuyacak
 window.endingMusicObj = null;
 
-// ─── API ile Üretim ──────────────────────────────────────────────────
+// ─── API ile Üretim — Replicate MusicGen ────────────────────────────
+// Token .env'den okunur. Yoksa veya başarısızsa null döner ve
+// üst katman prosedürel Web Audio sentezine geçer.
 async function tryApiGeneration(prompt) {
-    // Replicate MusicGen endpoint — token .env'den okunur
-    const token = await getReplicateToken();
-    if (!token) return null;
+    const token = await getEnvVar('REPLICATE_API_TOKEN');
+    if (!token) {
+        console.log('[ending-music] Replicate token yok, prosedürel sentezle devam.');
+        return null;
+    }
 
     const body = {
-        version: "7be0f12c54a8d033a0fbd14418c9af98962da9a86f5ff7811f9b3423a1f0b7d7",
+        version: "671ac645ce5e552cc63a54a2bbff63fcf798043055d2dac5fc9e36a837eedcfb",
         input: {
             prompt,
             model_version: "melody",
@@ -71,7 +75,6 @@ async function tryApiGeneration(prompt) {
         const prediction = await createRes.json();
         let result = prediction;
 
-        // Polling — sonuç hazır olana kadar bekle (max ~120sn)
         const maxAttempts = 60;
         for (let i = 0; i < maxAttempts; i++) {
             if (result.status === 'succeeded') break;
@@ -88,23 +91,29 @@ async function tryApiGeneration(prompt) {
         }
 
         if (result.status !== 'succeeded' || !result.output) return null;
-
-        // result.output genelde bir URL string veya URL dizisi
         const audioUrl = Array.isArray(result.output) ? result.output[0] : result.output;
-        console.log('[ending-music] AI müzik hazır:', audioUrl);
+        console.log('[ending-music] Replicate müzik hazır:', audioUrl);
         return audioUrl;
     } catch (err) {
-        console.warn('[ending-music] API hatası:', err.message);
+        console.warn('[ending-music] Replicate hatası:', err.message);
         return null;
     }
 }
 
-async function getReplicateToken() {
+// ─── Genel .env okuyucu ──────────────────────────────────────────────
+// Hem Vite (`import.meta.env.VITE_<NAME>`) hem statik server (.env fetch) destekler.
+async function getEnvVar(name) {
+    try {
+        const env = (typeof import.meta !== 'undefined') ? import.meta.env : null;
+        const viteName = `VITE_${name}`;
+        if (env && env[viteName]) return String(env[viteName]).trim();
+    } catch { /* pass */ }
     try {
         const res = await fetch(`.env?t=${Date.now()}`, { cache: 'no-store' });
         if (!res.ok) return null;
         const text = await res.text();
-        const m = text.match(/^\s*REPLICATE_API_TOKEN\s*=\s*(.+?)\s*$/m);
+        const re = new RegExp(`^\\s*(?:VITE_)?${name}\\s*=\\s*(.+?)\\s*$`, 'm');
+        const m = text.match(re);
         return m ? m[1].replace(/^["']|["']$/g, '').trim() : null;
     } catch {
         return null;
