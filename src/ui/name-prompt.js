@@ -21,9 +21,11 @@ export function askPlayerName() {
         function showError(msg) {
             error.textContent = msg;
             error.classList.add('visible');
+            input.style.borderBottom = '1px solid var(--warn)';
         }
         function clearError() {
             error.classList.remove('visible');
+            input.style.borderBottom = '';
         }
 
         function submit() {

@@ -142,8 +142,8 @@ body.high-burden #burden-fill {
 
 @keyframes burden-danger-pulse {
     from { opacity: 1; box-shadow: 0 0 6px currentColor; }
-    50%  { opacity: 0.7; box-shadow: 0 0 14px currentColor; }
-    to   { opacity: 0.4; box-shadow: 0 0 22px currentColor; }
+    50%  { opacity: 0.65; box-shadow: 0 0 16px currentColor; }
+    to   { opacity: 0.35; box-shadow: 0 0 26px currentColor; }
 }
 
 #burden-score, .bar-pct {
@@ -287,7 +287,7 @@ body.high-burden #burden-fill {
     transform: translateY(100vh);
 }
 #credits-overlay.visible #credits-content {
-    animation: credits-scroll 75s linear forwards;
+    animation: credits-scroll 90s linear forwards;
 }
 @keyframes credits-scroll {
     from { transform: translateY(100vh); }
@@ -384,8 +384,8 @@ body.high-burden #burden-fill {
     width: min(680px, 92%);
     max-height: 70vh;
     border: 2px solid var(--phosphor);
-    background: rgba(18, 14, 10, 0.94);
-    box-shadow: 0 0 14px rgba(255, 176, 0, 0.35), inset 0 0 10px rgba(255, 176, 0, 0.08);
+    background: rgba(18, 14, 10, 0.96);
+    box-shadow: 0 0 18px rgba(255, 176, 0, 0.4), inset 0 0 12px rgba(255, 176, 0, 0.1);
     padding: 14px 18px 10px;
     color: var(--phosphor);
     display: flex;
@@ -655,7 +655,9 @@ body.high-burden #burden-fill {
     animation: intro-blink 1.4s ease-in-out infinite;
 }
 @keyframes intro-blink {
-    50% { opacity: 0.4; }
+    0%   { opacity: 1; }
+    50%  { opacity: 0.3; }
+    100% { opacity: 1; }
 }
 
 /* --- İsim girişi (Faz 1 modal) --- */
