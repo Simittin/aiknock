@@ -57,8 +57,15 @@ export async function ensureSentimentLoaded() {
 // olumlu cevaplar sadece hafif rahatlama sağlar.
 // 1⭐ → +28, 2⭐ → +18, 3⭐ → +3, 4⭐ → -5, 5⭐ → -8
 export async function analyzeAndApply(text) {
+    // Edge-case: Empty or short text handling to prevent model noise
+    if (!text || text.trim().length < 2) {
+        return { stars: 3, score: 1.0, delta: 0 };
+    }
+
     const m = await ensureSentimentLoaded();
-    const [result] = await m(text);
+    
+    // Performance optimization: Using default parameters for multilingual BERT inference
+    const [result] = await m(text, { topk: 1 });
     const stars = parseInt((result.label || '3').match(/\d/)?.[0] || '3', 10);
     const conf = result.score || 0.5;
 
