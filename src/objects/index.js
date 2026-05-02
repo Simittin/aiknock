@@ -148,4 +148,20 @@ export const objects = {
         lore: true,
         loreText: "Çalışma masasının köşesinde, üzerinde Dylan'ın isminin baş harfleri kazınmış plastik bir pena. Sahne ışıklarını hiç görmedi ama bu odanın dört duvarı arasında çalınan en dürüst şarkılara tanıklık etti. Giderken yanında götürmeli miyim, yoksa bu sessizliğe mi bırakmalıyım?"
     },
+    dog_tags: {
+        id: 'dog_tags',
+        name: 'Asker Künyeleri',
+        kind: 'dog_tags',
+        blocking: true,
+        lore: true,
+        loreText: "İki metal plaka soğukça birbirine çarpıyor. Üzerinde sadece adım, soyadım ve bir numara var. Devlet için ben bu numarayım. Ama bu evde, bu metal parçaları sadece yaklaşan ayrılığın soğuk sesi."
+    },
+    newspaper: {
+        id: 'newspaper',
+        name: 'Eski Gazete',
+        kind: 'newspaper',
+        blocking: true,
+        lore: true,
+        loreText: "1973 Ocak ayı tarihli bir gazete. Manşette 'Vietnam'da Barış Yakın' yazıyor. Ama mutfaktaki sessizlik barıştan çok fırtına öncesi sessizliğe benziyor. Kağıt sararmış, tıpkı umutlarımız gibi."
+    },
 };

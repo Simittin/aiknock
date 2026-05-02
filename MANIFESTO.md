@@ -73,9 +73,11 @@ Sonuç olarak yapay zeka bu projede bir araç da değil, saf bir kolaboratör de
 
 ### Egemen'in Yansıması
 
-Bir anlatı tasarımcısı olarak "Veda Yolu"nu kurgularken, her etkileşimin bir vedaya dönüşmesini hedefledim. Bob Dylan’ın şarkısındaki o "rozetin ağırlığı", bizim oyunumuzda sadece bir mekanik değil, oyuncunun her adımda hissettiği bir vicdan muhasebesiydi. Piksel sanatının o sınırlı ama samimi dilini, anlatının melankolik tonuyla birleştirmek benim için en büyük yaratıcı zorluktu. Oyunun sonunda kapıya varıldığında, oyuncunun elinde kalan tek şeyin kendi sözleri olması, anlatı tasarımımızın en saf halidir.
+Bir anlatı tasarımcısı ve görsel kimlik yöneticisi olarak "Veda Yolu"nu kurgularken, her etkileşimin sadece bir diyalog değil, bir "yüzleşme" olmasını hedefledim. Bob Dylan’ın şarkısındaki o "rozetin ağırlığı", bizim oyunumuzda sadece bir mekanik değil, oyuncunun her adımda hissettiği bir vicdan muhasebesiydi. Piksel sanatının o sınırlı ama samimi dilini, anlatının melankolik tonuyla birleştirmek benim için en büyük yaratıcı zorluktu. Her bir sprite'ı çizerken, o piksellerin arkasında yaşanmamış bir geleceğin hüznünü saklamaya çalıştım.
 
-Benim için "bırakmak", geçmişin yükünü reddetmek değil, o yükle birlikte yürümeyi öğrenip kapıda ondan helallik alarak ayrılmaktır. Görsel kimliği oluştururken kullandığımız o puslu ve karanlık atmosfer, aslında bu helalleşme anının öncesindeki o belirsizliği temsil ediyordu. Her nesne, oyuncuyu bir seçim yapmaya zorlarken aslında ona şunu sordu: "Kendini kapıdan geçmeye hazır hissediyor musun?"
+Oyunun görsel kimliğini oluştururken kullandığımız o puslu ve karanlık atmosfer, aslında bir helalleşme anının öncesindeki o belirsizliği temsil ediyordu. Her nesne —o paslanmış tüfek, annenin titreyen elleriyle yazdığı mektup veya sessizce dönen plak— oyuncuyu bir seçim yapmaya zorlarken aslında ona şunu sordu: "Kendini kapıdan geçmeye hazır hissediyor musun?" Karakter tasarımlarında kullandığım omuzu düşük, yorgun silüet, 1973’ün omuzlara yüklediği o kolektif ağırlığın bir yansımasıydı.
+
+AI'ın "İç Ses" (Inner Voice) olarak kurgulanması kararı, anlatının omurgasını oluşturdu. Oyuncunun kendi kelimelerini AI aracılığıyla ona geri yansıtarak, aslında oyunu bir "ayna" haline getirdik. Benim için "bırakmak", geçmişin yükünü reddetmek değil, o yükle birlikte yürümeyi öğrenip kapıda ondan helallik alarak ayrılmaktır. "Veda Yolu", bu helalliği arayanların, kapıyı çalmadan önce son bir kez arkasına bakma cesaretini gösterenlerin hikayesidir.
 
 
 ---

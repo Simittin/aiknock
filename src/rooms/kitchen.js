@@ -44,6 +44,7 @@ const objects = [
     { id: 'mom',    col: 13, row: 5 },   // masanın yanında, oğluna bakıyor
     // Lore Easter egg
     { id: 'old_radio', col: 3, row: 1 }, // tezgâh üstünde, statik cızırtı
+    { id: 'newspaper', col: 8, row: 5 }, // masanın üstünde
 ];
 
 export const kitchen = {
