@@ -15,6 +15,8 @@
 
 Oyun, **CSE 358 Yapay Zekaya Giriş** dersi yaratıcı projesi kapsamında geliştirilmiştir. İki bağımsız üretici yapay zeka tekniği — bir LLM ve bir duygu sınıflandırıcı — hem oyun mekaniğinin hem de duygusal anlatının merkezine yerleştirilmiştir.
 
+![Oyun içi görünüm — yatak odası](screenshots/02-yatak-odasi.png)
+
 ---
 
 ## Sanatçı Beyanı
@@ -124,6 +126,30 @@ Her iki katman da Yük skoruna göre tonalite değiştirir — `< 50` ise majör
 |-----|-------|---------|
 | **Hafif** | Yük < 50 | Özgürce kapıya yürü; sakin folk jenerik |
 | **Ağır** | Yük ≥ 50 | Sürünen adımlar; ekran kırmızıya döner; glitch efektleri |
+
+---
+
+## Ekran Görüntüleri
+
+**Kayıt & Keşif**
+
+| | |
+|:---:|:---:|
+| ![CELP Kayıt Ekranı](screenshots/01-celp-kayit.png) | ![Oturma Odası](screenshots/03-oturma-odasi.png) |
+| *ABD Savunma Bakanlığı CELP terminali — 1973* | *Oturma odası — Amerikan bayrağı ve aile nesneleri* |
+| ![Mutfak](screenshots/04-mutfak.png) | ![Yatak Odası](screenshots/02-yatak-odasi.png) |
+| *Mutfak — günlük hayatın izleri* | *Yatak odası — Ruhsal Yük çubuğu sol üstte* |
+
+**İki Son**
+
+| Hafif Son — Yük < 50 | Ağır Son — Yük ≥ 50 |
+|:---:|:---:|
+| ![Hafif Son](screenshots/07-hafif-son.png) | ![Ağır Son](screenshots/05-agir-son.png) |
+| *"Knock, knock, knockin' on heaven's door..."* | *"It's gettin' dark, too dark to see..."* |
+
+**Jenerik**
+
+![Jenerik ekranı](screenshots/06-jenerik.png)
 
 ---
 
@@ -286,6 +312,8 @@ CSE 358 Yapay Zekaya Giriş dersi kapsamında geliştirilmiştir, Bahar 2025–2
 
 Built as a **CSE 358 Introduction to Artificial Intelligence** creative project, the game places two distinct generative AI techniques — an LLM and a sentiment classifier — at the heart of both gameplay and emotional storytelling.
 
+![Gameplay — bedroom](screenshots/02-yatak-odasi.png)
+
 ## Artist Statement
 
 "Knockin' on Heaven's Door" was written for a dying sheriff in Sam Peckinpah's *Pat Garrett & Billy the Kid* (1973). The same year, the Paris Peace Accords formally ended the United States' combat role in Vietnam — leaving behind a generation, and 58,000 who never returned. Dylan condensed that weight into four lines and a melody.
@@ -344,6 +372,22 @@ Both layers shift tonality with Burden — major/peaceful below 50, minor/draggi
 |--------|-----------|------------|
 | **Light** | Burden < 50 | Walk freely to the door; peaceful folk credits |
 | **Heavy** | Burden ≥ 50 | Slow, agonized shuffle; screen turns red; glitch effects |
+
+**Screenshots**
+
+| | |
+|:---:|:---:|
+| ![CELP Registration](screenshots/01-celp-kayit.png) | ![Living Room](screenshots/03-oturma-odasi.png) |
+| *U.S. Army CELP terminal — 1973* | *Living room — the flag, the objects left behind* |
+| ![Kitchen](screenshots/04-mutfak.png) | ![Bedroom](screenshots/02-yatak-odasi.png) |
+| *Kitchen — traces of everyday life* | *Bedroom — Burden bar visible top-left* |
+
+| Light Ending — Burden < 50 | Heavy Ending — Burden ≥ 50 |
+|:---:|:---:|
+| ![Light Ending](screenshots/07-hafif-son.png) | ![Heavy Ending](screenshots/05-agir-son.png) |
+| *"Knock, knock, knockin' on heaven's door..."* | *"It's gettin' dark, too dark to see..."* |
+
+![Credits screen](screenshots/06-jenerik.png)
 
 ## Setup
 
