@@ -140,4 +140,12 @@ export const objects = {
         lore: true,
         loreText: "Radyodan boğuk bir cızırtı yükseliyor. Spiker uzaklardaki, ormanların içindeki o anlamsız savaşın bilançosunu okuyor. Anlaşılan o ki, silahlar sadece eski vahşi batıda patlamıyor."
     },
+    guitar_pick: {
+        id: 'guitar_pick',
+        name: 'Eski Gitar Penası',
+        kind: 'guitar_pick',
+        blocking: true,
+        lore: true,
+        loreText: "Çalışma masasının köşesinde, üzerinde Dylan'ın isminin baş harfleri kazınmış plastik bir pena. Sahne ışıklarını hiç görmedi ama bu odanın dört duvarı arasında çalınan en dürüst şarkılara tanıklık etti. Giderken yanında götürmeli miyim, yoksa bu sessizliğe mi bırakmalıyım?"
+    },
 };

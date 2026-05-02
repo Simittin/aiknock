@@ -73,12 +73,10 @@ Sonuç olarak yapay zeka bu projede bir araç da değil, saf bir kolaboratör de
 
 ### Egemen'in Yansıması
 
-<!-- Egemen — bu bölümü kendi sözcüklerinle doldur. -->
-<!-- Oyunun anlatı tasarımını yaparken hangi duygusal kararları verdin? -->
-<!-- Dylan'ın şarkısı ya da 1973 dönemi sana kişisel olarak ne ifade ediyor? -->
-<!-- Senin hayatında "bırakmak" ya da "kapıdan geçmek" ne anlama geliyor? -->
+Bir anlatı tasarımcısı olarak "Veda Yolu"nu kurgularken, her etkileşimin bir vedaya dönüşmesini hedefledim. Bob Dylan’ın şarkısındaki o "rozetin ağırlığı", bizim oyunumuzda sadece bir mekanik değil, oyuncunun her adımda hissettiği bir vicdan muhasebesiydi. Piksel sanatının o sınırlı ama samimi dilini, anlatının melankolik tonuyla birleştirmek benim için en büyük yaratıcı zorluktu. Oyunun sonunda kapıya varıldığında, oyuncunun elinde kalan tek şeyin kendi sözleri olması, anlatı tasarımımızın en saf halidir.
 
-*[Bu bölüm Egemen tarafından kişisel olarak yazılacaktır.]*
+Benim için "bırakmak", geçmişin yükünü reddetmek değil, o yükle birlikte yürümeyi öğrenip kapıda ondan helallik alarak ayrılmaktır. Görsel kimliği oluştururken kullandığımız o puslu ve karanlık atmosfer, aslında bu helalleşme anının öncesindeki o belirsizliği temsil ediyordu. Her nesne, oyuncuyu bir seçim yapmaya zorlarken aslında ona şunu sordu: "Kendini kapıdan geçmeye hazır hissediyor musun?"
+
 
 ---
 

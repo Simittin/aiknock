@@ -48,6 +48,7 @@ const objects = [
     // Lore Easter egg'leri
     { id: 'movie_ticket', col: 12, row: 8 },
     { id: 'lore_record',  col: 5,  row: 8 },
+    { id: 'guitar_pick',  col: 2,  row: 8 },  // çalışma masasının üstü
 ];
 
 export const bedroom = {

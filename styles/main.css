@@ -68,6 +68,24 @@ body.high-burden {
     100% { opacity: 0.98; }
 }
 
+.scanline {
+    width: 100%;
+    height: 100px;
+    z-index: 8;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(255, 176, 0, 0.03) 50%, rgba(0, 0, 0, 0) 100%);
+    opacity: 0.1;
+    position: absolute;
+    bottom: 100%;
+    pointer-events: none;
+    animation: scanline 8s linear infinite;
+}
+
+@keyframes scanline {
+    0%   { bottom: 100%; }
+    80%  { bottom: 100%; }
+    100% { bottom: -100px; }
+}
+
 #game-container {
     border: 1px solid var(--phosphor);
     box-shadow: 0 0 10px rgba(255, 176, 0, 0.3), inset 0 0 15px rgba(255, 176, 0, 0.05);
@@ -94,6 +112,12 @@ body.high-burden {
     margin: 0 0 6px 0;
     font-size: 18px;
     letter-spacing: 3px;
+    animation: header-glow 4s ease-in-out infinite alternate;
+}
+
+@keyframes header-glow {
+    from { text-shadow: 0 0 5px rgba(255, 176, 0, 0.4); }
+    to   { text-shadow: 0 0 15px rgba(255, 176, 0, 0.8), 0 0 2px var(--phosphor); }
 }
 
 #hud {
