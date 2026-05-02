@@ -284,11 +284,11 @@ Yaratıcı vizyon, mimari kararlar ve felsefi yansıma ekibe aittir; AI üretti�
 
 ## Ekip
 
-| İsim | Rol |
-|------|-----|
-| **Ahmet Melih Bostancıeri** | AI entegrasyonu, oyun motoru, ses sistemleri |
-| **Egemen** | Anlatı tasarımı, nesne diyalogları, tarihsel araştırma |
-| **Yunus** | Görsel tasarım, sprite art, UI/UX |
+| İsim | Öğrenci No | Rol |
+|------|:----------:|-----|
+| **Ahmet Melih Bostancıeri** | 20220808063 | Teknik altyapı, AI entegrasyonu, tarihsel araştırma, ses sistemi |
+| **Egemen Çamözü** | 20220808076 | Görsel kimlik, sprite tasarımı, anlatı, iç ses diyalogları, prompt mühendisliği |
+| **Yunus Emre Balcı** | 20220808026 | Yaratıcı yönelim, UI/UX, CRT estetiği, ses konsepti, anne diyalogları |
 
 ---
 
@@ -454,11 +454,11 @@ Creative vision, architectural decisions, and philosophical reflection are the t
 
 ## Team
 
-| Name | Role |
-|------|------|
-| **Ahmet Melih Bostancıeri** | AI integration, game engine, audio systems |
-| **Egemen** | Narrative design, object dialogue, historical research |
-| **Yunus** | Visual design, sprite art, UI/UX |
+| Name | Student ID | Role |
+|------|:----------:|------|
+| **Ahmet Melih Bostancıeri** | 20220808063 | Technical architecture, AI integration, historical research, audio systems |
+| **Egemen Çamözü** | 20220808076 | Visual identity, sprite design, narrative, inner voice dialogues, prompt engineering |
+| **Yunus Emre Balcı** | 20220808026 | Creative direction, UI/UX, CRT aesthetic, audio concept, mother dialogues |
 
 ## License
 
