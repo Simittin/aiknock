@@ -406,20 +406,36 @@ export function playFootstep() {
     noise.stop(t + 0.1);
 }
 
-export function playInteract() {
+export function playInteract(variant = 0) {
     if (!started) return;
     ensure();
     const t = ctx.currentTime;
+
+    // Her nesne tipi için hafif farklı frekans — aynı bip sesinden kaçın
+    const baseFreqs = [600, 660, 720, 580, 700, 640, 560, 680];
+    const base = baseFreqs[variant % baseFreqs.length];
+
     const osc = ctx.createOscillator();
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(660, t);
-    osc.frequency.exponentialRampToValueAtTime(880, t + 0.05);
+    osc.frequency.setValueAtTime(base, t);
+    osc.frequency.exponentialRampToValueAtTime(base * 1.35, t + 0.06);
+
+    const osc2 = ctx.createOscillator();
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(base * 1.5, t + 0.06);
+    osc2.frequency.exponentialRampToValueAtTime(base * 1.5 * 0.92, t + 0.18);
+
     const gain = ctx.createGain();
-    gain.gain.setValueAtTime(0.07, t);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
+    gain.gain.setValueAtTime(0.06, t);
+    gain.gain.exponentialRampToValueAtTime(0.03, t + 0.07);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+
     osc.connect(gain).connect(masterGain);
+    osc2.connect(gain);
     osc.start(t);
-    osc.stop(t + 0.2);
+    osc.stop(t + 0.1);
+    osc2.start(t + 0.06);
+    osc2.stop(t + 0.24);
 }
 
 export function playDoor() {
