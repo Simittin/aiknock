@@ -448,17 +448,17 @@ export function playBurdenSpike() {
     const thump = (offset) => {
         const o = ctx.createOscillator();
         o.type = 'sine';
-        o.frequency.setValueAtTime(70, t + offset);
-        o.frequency.exponentialRampToValueAtTime(40, t + offset + 0.16);
+        o.frequency.setValueAtTime(75, t + offset);
+        o.frequency.exponentialRampToValueAtTime(38, t + offset + 0.18);
         const g = ctx.createGain();
-        g.gain.setValueAtTime(0.20, t + offset);
-        g.gain.exponentialRampToValueAtTime(0.001, t + offset + 0.22);
+        g.gain.setValueAtTime(0.24, t + offset);
+        g.gain.exponentialRampToValueAtTime(0.001, t + offset + 0.26);
         o.connect(g).connect(masterGain);
         o.start(t + offset);
-        o.stop(t + offset + 0.24);
+        o.stop(t + offset + 0.28);
     };
     thump(0);
-    thump(0.18);
+    thump(0.22);
 }
 
 export function playKnockTheme() {
