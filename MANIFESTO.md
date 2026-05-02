@@ -84,12 +84,15 @@ Sonuç olarak yapay zeka bu projede bir araç da değil, saf bir kolaboratör de
 
 ### Yunus'un Yansıması
 
-<!-- Yunus — bu bölümü kendi sözcüklerinle doldur. -->
-<!-- Piksel-art tasarımını yaparken hangi görsel kararlar seni en çok etkiledi? -->
-<!-- Oyunun görsel estetiğinde kendi duygunu nasıl yansıttın? -->
-<!-- "Cennetin kapısı" metaforu sana ne ifade ediyor? -->
+Bir oyunun görsel dilini kurarken ilk soruyu sormak her şeyden zordur: *Bu, nasıl görünmeli?* Teknik bir soru değil bu — aslında duygusal bir soru. Ve "Veda Yolu"nda o soruya verdiğim ilk cevap bir renk oldu: amber sarısı.
 
-*[Bu bölüm Yunus tarafından kişisel olarak yazılacaktır.]*
+1970'lerin askeri terminallerinin fosfor sarısı bana başından beri doğru geldi. Çünkü o renk nötr değil; zaten bir şey söylüyor. Soğuk, resmi, insansız. Oyuncunun adını ilk girdiği anda bir CELP terminaliyle karşılaşması ve "DOSYA ONAYI BEKLENİYOR" yazısını okuması, amber çerçevesi içinde bir bireyin kayıt nesnesine dönüştüğü anı görselleştiriyor. Ben o rengi seçerken bir dekorasyon yapmadım; bir argüman kurdum.
+
+Piksel-art kararı da aynı felsefi yerden geliyor. Yüksek çözünürlük her şeyi tamamlar, netleştirir, kapatır. Piksel-art ise boşluk bırakır. Babanın tüfeği tek renk bloklarından oluştuğunda her oyuncu onu farklı görür — kimi çocukluğunun bir köşesini, kimi hiç tutmadığı bir ağırlığı. O eksiklik kasıtlıydı; oyuncunun kendi anısını taşıması için alan açmak istedim.
+
+Oturma odasının ortasındaki bayrak da bir karar. Hiçbir diyalog açmıyor, hiçbir şey söylemiyor — sadece duruyor. Ama her geçişte orada. Bazı şeylerin sessizliği, sözden daha ağır basar.
+
+"Cennetin kapısı" metaforu bana kişisel olarak eşiği hatırlatıyor — dönemediğin, geri adım atamadığın o tek anı. Oyunun görsel tasarımında hep o eşiği aradım: kapı piksellerini, son adımı, ekranın karardığı ya da ağardığı o geçiş çerçevesini. Çünkü kapıdan geçmek bir olay değil; bir tercih. Ve her tercih, arkasında bıraktıklarının şeklini taşır.
 
 ---
 
