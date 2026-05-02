@@ -13,8 +13,8 @@ import { generateEndingMusic, resetEndingMusic } from './audio/ending-music.js';
 
 // Finale ilerlemesini belirleyen toplam etkileşimli yansıma sayısı.
 const TOTAL_OBJECTS = 8;
-const BURDEN_LOW_MAX = 30;
-const BURDEN_HIGH_MIN = 70;
+const BURDEN_LOW_MAX = 35;
+const BURDEN_HIGH_MIN = 65;
 const BURDEN_COLORS = {
     low: '#FFB000',
     medium: '#FF5722',

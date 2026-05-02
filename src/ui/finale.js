@@ -52,10 +52,10 @@ export function startFinaleAttempt(player, doorTile) {
 function showLockedMessage(done) {
     const el = document.getElementById('finale-locked');
     if (!el) return;
-    el.textContent = `Henüz vakti gelmedi.   ${done}/${TOTAL_OBJECTS} yansıma tamamlandı.`;
+    el.textContent = `Henüz vakti gelmedi — ${done}/${TOTAL_OBJECTS} yansıma tamamlandı.`;
     el.classList.add('visible');
     clearTimeout(showLockedMessage._t);
-    showLockedMessage._t = setTimeout(() => el.classList.remove('visible'), 2400);
+    showLockedMessage._t = setTimeout(() => el.classList.remove('visible'), 3000);
 }
 
 function startCutscene(player, doorTile) {
