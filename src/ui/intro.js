@@ -45,7 +45,6 @@ export function showIntro(playerName) {
         function tick() {
             i++;
             body.innerHTML = renderText(NARRATIVE.slice(0, i));
-            // Otomatik kaydır
             body.scrollTop = body.scrollHeight;
             if (i >= NARRATIVE.length) {
                 finishTyping();

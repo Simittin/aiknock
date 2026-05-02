@@ -499,15 +499,18 @@ body.high-burden #burden-fill {
     z-index: 5;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    overflow-y: auto;
+    padding: 24px 0;
     background: #050505;
 }
 #intro-overlay.hidden { display: none; }
 
 #intro-box {
     width: min(720px, 92%);
-    max-height: 90vh;
-    overflow-y: auto;
+    height: min(680px, 88vh);
+    display: flex;
+    flex-direction: column;
     border: 2px solid var(--phosphor);
     background: rgba(18, 14, 10, 0.96);
     box-shadow: 0 0 18px rgba(255, 176, 0, 0.35), inset 0 0 12px rgba(255, 176, 0, 0.08);
@@ -537,13 +540,16 @@ body.high-burden #burden-fill {
 }
 
 #intro-body {
+    flex: 1;
+    overflow-y: auto;
     font-size: 14px;
     line-height: 1.65;
     color: #c8ffc8;
-    min-height: 120px;
     white-space: normal;
     margin-bottom: 14px;
+    scrollbar-width: none;
 }
+#intro-body::-webkit-scrollbar { display: none; }
 
 #intro-after {
     opacity: 0;

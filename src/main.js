@@ -7,7 +7,7 @@ import { onBurdenChange, getBurden, resetBurden, setBurden } from './state/burde
 import { onScoresChange, getCompletedCount, getTotalScore, resetScores, markCompleted } from './state/scores.js';
 import { clearProfile } from './state/profile.js';
 import { getApiKey } from './ai/env-loader.js';
-import { onSentimentState } from './ai/sentiment.js';
+import { onSentimentState, ensureSentimentLoaded } from './ai/sentiment.js';
 import * as Audio from './audio/audio.js';
 import { generateEndingMusic, resetEndingMusic } from './audio/ending-music.js';
 
@@ -121,6 +121,9 @@ async function boot() {
     paintBurden(getBurden());
     onScoresChange(paintProgress);
     paintProgress();
+
+    // Model yüklemeyi arka planda başlat — kullanıcı isim girerken insin.
+    ensureSentimentLoaded().catch(() => {});
 
     // 1. Önce yalnızca isim kutucuğu.
     await askPlayerName();
