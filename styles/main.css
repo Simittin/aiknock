@@ -141,8 +141,9 @@ body.high-burden #burden-fill {
 }
 
 @keyframes burden-danger-pulse {
-    from { opacity: 1; box-shadow: 0 0 8px currentColor; }
-    to { opacity: 0.5; box-shadow: 0 0 18px currentColor; }
+    from { opacity: 1; box-shadow: 0 0 6px currentColor; }
+    50%  { opacity: 0.7; box-shadow: 0 0 14px currentColor; }
+    to   { opacity: 0.4; box-shadow: 0 0 22px currentColor; }
 }
 
 #burden-score, .bar-pct {
