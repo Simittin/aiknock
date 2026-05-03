@@ -1,15 +1,3 @@
-/**
- * @file main.js
- * @description 1973: Veda Yolu - Core Engine Entry Point
- * @version 1.1.0
- * @author Egemen Çamözü & AI Collaboration
- * 
- * SYSTEM ARCHITECTURE:
- * - Component-based Entity System for interactable objects.
- * - Multi-layered Canvas rendering with CRT post-processing.
- * - Asynchronous AI integration for narrative flow.
- */
-
 import { startEngine } from './engine/loop.js';
 import { askPlayerName } from './ui/name-prompt.js';
 import { showIntro } from './ui/intro.js';
@@ -25,8 +13,8 @@ import { generateEndingMusic, resetEndingMusic } from './audio/ending-music.js';
 
 // Finale ilerlemesini belirleyen toplam etkileşimli yansıma sayısı.
 const TOTAL_OBJECTS = 8;
-const BURDEN_LOW_MAX = 35;
-const BURDEN_HIGH_MIN = 65;
+const BURDEN_LOW_MAX = 30;
+const BURDEN_HIGH_MIN = 70;
 const BURDEN_COLORS = {
     low: '#FFB000',
     medium: '#FF5722',

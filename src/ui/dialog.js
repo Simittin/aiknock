@@ -6,7 +6,7 @@
 
 import { callGeminiQA } from '../ai/gemini.js?v=8';
 import { analyzeAndApply, ensureSentimentLoaded } from '../ai/sentiment.js';
-import { getBurden, onBurdenChange } from '../state/burden.js';
+import { getBurden } from '../state/burden.js';
 import { getPlayerName } from '../state/profile.js';
 import { recordTurn, markCompleted } from '../state/scores.js';
 import { buildInnerVoicePrompt, buildMomPrompt, openingNudge } from '../ai/prompts.js';
@@ -24,7 +24,6 @@ let onCloseCb = null;
 let dotTimer = null;
 let autoCloseTimer = null;
 let activeChoices = null;     // [{text, label}] | null
-let burdenUnsubscribe = null;
 
 const $ = (id) => document.getElementById(id);
 
@@ -257,21 +256,6 @@ export async function openConversation({ objectId, onClose }) {
     $('dialog-input').addEventListener('keydown', onInputKey);
     window.addEventListener('keydown', onChoiceKey);
 
-    burdenUnsubscribe = onBurdenChange((b) => {
-        const box = $('dialog-box');
-        if (!box) return;
-        if (b >= 65) {
-            box.style.borderColor = 'var(--warn)';
-            box.style.boxShadow = '0 0 18px rgba(255,80,80,0.45), inset 0 0 12px rgba(255,80,80,0.1)';
-        } else if (b >= 35) {
-            box.style.borderColor = '#ff7a00';
-            box.style.boxShadow = '0 0 18px rgba(255,122,0,0.4), inset 0 0 12px rgba(255,122,0,0.08)';
-        } else {
-            box.style.borderColor = '';
-            box.style.boxShadow = '';
-        }
-    });
-
     ensureSentimentLoaded().catch(() => { /* sessizce geç */ });
 
     await fetchReply(openingNudge(activeObject.role), true);
@@ -282,9 +266,6 @@ export function closeDialog() {
     $('dialog-overlay').classList.add('hidden');
     $('dialog-input').removeEventListener('keydown', onInputKey);
     window.removeEventListener('keydown', onChoiceKey);
-    if (burdenUnsubscribe) { burdenUnsubscribe(); burdenUnsubscribe = null; }
-    const box = $('dialog-box');
-    if (box) { box.style.borderColor = ''; box.style.boxShadow = ''; }
     stopThinking();
     clearChoices();
     if (autoCloseTimer) { clearTimeout(autoCloseTimer); autoCloseTimer = null; }

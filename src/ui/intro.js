@@ -14,7 +14,7 @@ Gitmeden önce son bir kez evde dolaş. Annene veda et. Ancak unutma; ruhunda ta
 
 Kelimelerini dikkatli seç. Yüklerini bırak. Ve kapıyı çal.`;
 
-const TYPE_SPEED_MS = 18;
+const TYPE_SPEED_MS = 22;
 
 function escapeHtml(s) {
     return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');

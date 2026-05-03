@@ -1,15 +1,10 @@
 :root {
-    /* --- Brand Colors (1973 Amber Phosphor) --- */
     --phosphor: #FFB000;
     --phosphor-dim: #cc8d00;
     --warn: #ff5050;
-    
-    /* --- System & Canvas Backgrounds --- */
     --bg: #120e0a;
     --terminal-black: #000000;
     --canvas-bg: #0a0708;
-    
-    /* --- Narrative & Object Highlights --- */
     --paper: #e8d8a8;
     --brass: #c89846;
 }
@@ -50,12 +45,12 @@ body.high-burden {
     position: absolute;
     inset: 0;
     background:
-        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.32) 50%),
-        linear-gradient(90deg, rgba(255, 0, 0, 0.05), rgba(0, 255, 0, 0.025), rgba(0, 0, 255, 0.05));
-    background-size: 100% 2px, 3px 100%;
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.28) 50%),
+        linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.04));
+    background-size: 100% 3px, 4px 100%;
     z-index: 2;
     pointer-events: none;
-    animation: flicker 0.12s infinite;
+    animation: flicker 0.15s infinite;
 }
 
 .crt::after {
@@ -71,24 +66,6 @@ body.high-burden {
     0%   { opacity: 0.97; }
     50%  { opacity: 1; }
     100% { opacity: 0.98; }
-}
-
-.scanline {
-    width: 100%;
-    height: 100px;
-    z-index: 8;
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(255, 176, 0, 0.03) 50%, rgba(0, 0, 0, 0) 100%);
-    opacity: 0.1;
-    position: absolute;
-    bottom: 100%;
-    pointer-events: none;
-    animation: scanline 8s linear infinite;
-}
-
-@keyframes scanline {
-    0%   { bottom: 100%; }
-    80%  { bottom: 100%; }
-    100% { bottom: -100px; }
 }
 
 #game-container {
@@ -117,12 +94,6 @@ body.high-burden {
     margin: 0 0 6px 0;
     font-size: 18px;
     letter-spacing: 3px;
-    animation: header-glow 4s ease-in-out infinite alternate;
-}
-
-@keyframes header-glow {
-    from { text-shadow: 0 0 5px rgba(255, 176, 0, 0.4); }
-    to   { text-shadow: 0 0 15px rgba(255, 176, 0, 0.8), 0 0 2px var(--phosphor); }
 }
 
 #hud {
@@ -170,9 +141,8 @@ body.high-burden #burden-fill {
 }
 
 @keyframes burden-danger-pulse {
-    from { opacity: 1; box-shadow: 0 0 6px currentColor; }
-    50%  { opacity: 0.65; box-shadow: 0 0 16px currentColor; }
-    to   { opacity: 0.35; box-shadow: 0 0 26px currentColor; }
+    from { opacity: 1; box-shadow: 0 0 8px currentColor; }
+    to { opacity: 0.5; box-shadow: 0 0 18px currentColor; }
 }
 
 #burden-score, .bar-pct {
@@ -253,8 +223,8 @@ body.high-burden #burden-fill {
     transition: opacity 4s ease, background 4s ease;
 }
 #ending-overlay.heavy #ending-text {
-    color: #cc1a1a;
-    text-shadow: 0 0 8px rgba(204, 26, 26, 0.8), 0 0 24px rgba(180, 0, 0, 0.4);
+    color: #aa1818;
+    text-shadow: 0 0 12px rgba(170, 24, 24, 0.7);
     font-family: 'Courier New', monospace;
     letter-spacing: 4px;
 }
@@ -316,7 +286,7 @@ body.high-burden #burden-fill {
     transform: translateY(100vh);
 }
 #credits-overlay.visible #credits-content {
-    animation: credits-scroll 90s linear forwards;
+    animation: credits-scroll 75s linear forwards;
 }
 @keyframes credits-scroll {
     from { transform: translateY(100vh); }
@@ -413,8 +383,8 @@ body.high-burden #burden-fill {
     width: min(680px, 92%);
     max-height: 70vh;
     border: 2px solid var(--phosphor);
-    background: rgba(18, 14, 10, 0.96);
-    box-shadow: 0 0 18px rgba(255, 176, 0, 0.4), inset 0 0 12px rgba(255, 176, 0, 0.1);
+    background: rgba(18, 14, 10, 0.94);
+    box-shadow: 0 0 14px rgba(255, 176, 0, 0.35), inset 0 0 10px rgba(255, 176, 0, 0.08);
     padding: 14px 18px 10px;
     color: var(--phosphor);
     display: flex;
@@ -684,9 +654,7 @@ body.high-burden #burden-fill {
     animation: intro-blink 1.4s ease-in-out infinite;
 }
 @keyframes intro-blink {
-    0%   { opacity: 1; }
-    50%  { opacity: 0.3; }
-    100% { opacity: 1; }
+    50% { opacity: 0.4; }
 }
 
 /* --- İsim girişi (Faz 1 modal) --- */

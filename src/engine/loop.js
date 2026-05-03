@@ -98,18 +98,17 @@ function update() {
     // Etkileşim
     nearby = findInteraction(rooms[currentRoomId], player);
     if (nearby && consumeKey('e')) {
-        const objectIds = Object.keys(OBJECT_DB);
-        const variant = objectIds.indexOf(nearby.id);
         if (nearby.isFinale) {
-            Audio.playInteract(variant);
+            Audio.playInteract();
             startFinaleAttempt(player, nearby);
         } else {
             const def = OBJECT_DB[nearby.id];
             if (def && def.lore) {
-                Audio.playInteract(variant);
+                // Statik lore nesnesi — AI yok, burden yok
+                Audio.playInteract();
                 openLore(nearby.id);
             } else if (!isCompleted(nearby.id)) {
-                Audio.playInteract(variant);
+                Audio.playInteract();
                 openConversation({ objectId: nearby.id });
             }
         }

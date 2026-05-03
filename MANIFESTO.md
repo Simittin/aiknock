@@ -73,26 +73,23 @@ Sonuç olarak yapay zeka bu projede bir araç da değil, saf bir kolaboratör de
 
 ### Egemen'in Yansıması
 
-Bir anlatı tasarımcısı ve görsel kimlik yöneticisi olarak "Veda Yolu"nu kurgularken, her etkileşimin sadece bir diyalog değil, bir "yüzleşme" olmasını hedefledim. Bob Dylan’ın şarkısındaki o "rozetin ağırlığı", bizim oyunumuzda sadece bir mekanik değil, oyuncunun her adımda hissettiği bir vicdan muhasebesiydi. Piksel sanatının o sınırlı ama samimi dilini, anlatının melankolik tonuyla birleştirmek benim için en büyük yaratıcı zorluktu. Her bir sprite'ı çizerken, o piksellerin arkasında yaşanmamış bir geleceğin hüznünü saklamaya çalıştım.
+<!-- Egemen — bu bölümü kendi sözcüklerinle doldur. -->
+<!-- Oyunun anlatı tasarımını yaparken hangi duygusal kararları verdin? -->
+<!-- Dylan'ın şarkısı ya da 1973 dönemi sana kişisel olarak ne ifade ediyor? -->
+<!-- Senin hayatında "bırakmak" ya da "kapıdan geçmek" ne anlama geliyor? -->
 
-Oyunun görsel kimliğini oluştururken kullandığımız o puslu ve karanlık atmosfer, aslında bir helalleşme anının öncesindeki o belirsizliği temsil ediyordu. Her nesne —o paslanmış tüfek, annenin titreyen elleriyle yazdığı mektup veya sessizce dönen plak— oyuncuyu bir seçim yapmaya zorlarken aslında ona şunu sordu: "Kendini kapıdan geçmeye hazır hissediyor musun?" Karakter tasarımlarında kullandığım omuzu düşük, yorgun silüet, 1973’ün omuzlara yüklediği o kolektif ağırlığın bir yansımasıydı.
-
-AI'ın "İç Ses" (Inner Voice) olarak kurgulanması kararı, anlatının omurgasını oluşturdu. Oyuncunun kendi kelimelerini AI aracılığıyla ona geri yansıtarak, aslında oyunu bir "ayna" haline getirdik. Benim için "bırakmak", geçmişin yükünü reddetmek değil, o yükle birlikte yürümeyi öğrenip kapıda ondan helallik alarak ayrılmaktır. "Veda Yolu", bu helalliği arayanların, kapıyı çalmadan önce son bir kez arkasına bakma cesaretini gösterenlerin hikayesidir.
-
+*[Bu bölüm Egemen tarafından kişisel olarak yazılacaktır.]*
 
 ---
 
 ### Yunus'un Yansıması
 
-Bir oyunun görsel dilini kurarken ilk soruyu sormak her şeyden zordur: *Bu, nasıl görünmeli?* Teknik bir soru değil bu — aslında duygusal bir soru. Ve "Veda Yolu"nda o soruya verdiğim ilk cevap bir renk oldu: amber sarısı.
+<!-- Yunus — bu bölümü kendi sözcüklerinle doldur. -->
+<!-- Piksel-art tasarımını yaparken hangi görsel kararlar seni en çok etkiledi? -->
+<!-- Oyunun görsel estetiğinde kendi duygunu nasıl yansıttın? -->
+<!-- "Cennetin kapısı" metaforu sana ne ifade ediyor? -->
 
-1970'lerin askeri terminallerinin fosfor sarısı bana başından beri doğru geldi. Çünkü o renk nötr değil; zaten bir şey söylüyor. Soğuk, resmi, insansız. Oyuncunun adını ilk girdiği anda bir CELP terminaliyle karşılaşması ve "DOSYA ONAYI BEKLENİYOR" yazısını okuması, amber çerçevesi içinde bir bireyin kayıt nesnesine dönüştüğü anı görselleştiriyor. Ben o rengi seçerken bir dekorasyon yapmadım; bir argüman kurdum.
-
-Piksel-art kararı da aynı felsefi yerden geliyor. Yüksek çözünürlük her şeyi tamamlar, netleştirir, kapatır. Piksel-art ise boşluk bırakır. Babanın tüfeği tek renk bloklarından oluştuğunda her oyuncu onu farklı görür — kimi çocukluğunun bir köşesini, kimi hiç tutmadığı bir ağırlığı. O eksiklik kasıtlıydı; oyuncunun kendi anısını taşıması için alan açmak istedim.
-
-Oturma odasının ortasındaki bayrak da bir karar. Hiçbir diyalog açmıyor, hiçbir şey söylemiyor — sadece duruyor. Ama her geçişte orada. Bazı şeylerin sessizliği, sözden daha ağır basar.
-
-"Cennetin kapısı" metaforu bana kişisel olarak eşiği hatırlatıyor — dönemediğin, geri adım atamadığın o tek anı. Oyunun görsel tasarımında hep o eşiği aradım: kapı piksellerini, son adımı, ekranın karardığı ya da ağardığı o geçiş çerçevesini. Çünkü kapıdan geçmek bir olay değil; bir tercih. Ve her tercih, arkasında bıraktıklarının şeklini taşır.
+*[Bu bölüm Yunus tarafından kişisel olarak yazılacaktır.]*
 
 ---
 

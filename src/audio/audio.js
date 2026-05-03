@@ -406,36 +406,20 @@ export function playFootstep() {
     noise.stop(t + 0.1);
 }
 
-export function playInteract(variant = 0) {
+export function playInteract() {
     if (!started) return;
     ensure();
     const t = ctx.currentTime;
-
-    // Her nesne tipi için hafif farklı frekans — aynı bip sesinden kaçın
-    const baseFreqs = [600, 660, 720, 580, 700, 640, 560, 680];
-    const base = baseFreqs[variant % baseFreqs.length];
-
     const osc = ctx.createOscillator();
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(base, t);
-    osc.frequency.exponentialRampToValueAtTime(base * 1.35, t + 0.06);
-
-    const osc2 = ctx.createOscillator();
-    osc2.type = 'sine';
-    osc2.frequency.setValueAtTime(base * 1.5, t + 0.06);
-    osc2.frequency.exponentialRampToValueAtTime(base * 1.5 * 0.92, t + 0.18);
-
+    osc.frequency.setValueAtTime(660, t);
+    osc.frequency.exponentialRampToValueAtTime(880, t + 0.05);
     const gain = ctx.createGain();
-    gain.gain.setValueAtTime(0.06, t);
-    gain.gain.exponentialRampToValueAtTime(0.03, t + 0.07);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
-
+    gain.gain.setValueAtTime(0.07, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
     osc.connect(gain).connect(masterGain);
-    osc2.connect(gain);
     osc.start(t);
-    osc.stop(t + 0.1);
-    osc2.start(t + 0.06);
-    osc2.stop(t + 0.24);
+    osc.stop(t + 0.2);
 }
 
 export function playDoor() {
@@ -464,17 +448,17 @@ export function playBurdenSpike() {
     const thump = (offset) => {
         const o = ctx.createOscillator();
         o.type = 'sine';
-        o.frequency.setValueAtTime(75, t + offset);
-        o.frequency.exponentialRampToValueAtTime(38, t + offset + 0.18);
+        o.frequency.setValueAtTime(70, t + offset);
+        o.frequency.exponentialRampToValueAtTime(40, t + offset + 0.16);
         const g = ctx.createGain();
-        g.gain.setValueAtTime(0.24, t + offset);
-        g.gain.exponentialRampToValueAtTime(0.001, t + offset + 0.26);
+        g.gain.setValueAtTime(0.20, t + offset);
+        g.gain.exponentialRampToValueAtTime(0.001, t + offset + 0.22);
         o.connect(g).connect(masterGain);
         o.start(t + offset);
-        o.stop(t + offset + 0.28);
+        o.stop(t + offset + 0.24);
     };
     thump(0);
-    thump(0.22);
+    thump(0.18);
 }
 
 export function playKnockTheme() {
