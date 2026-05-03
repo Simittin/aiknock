@@ -62,12 +62,7 @@ Sonuç olarak yapay zeka bu projede bir araç da değil, saf bir kolaboratör de
 
 ### Ahmet Melih'in Yansıması
 
-<!-- Melih — bu bölümü kendi sözcüklerinle doldur. Aşağıdaki sorular bir başlangıç noktası: -->
-<!-- "Knockin' on Heaven's Door" sana kişisel olarak ne söylüyor? -->
-<!-- Hayatında hangi vedaları ya da eşikleri çağrıştırıyor? -->
-<!-- Bu projeyi yaparken seni en çok etkileyen an ya da karar neydi? -->
-
-*[Bu bölüm Ahmet Melih tarafından kişisel olarak yazılacaktır.]*
+"Knockin' on Heaven's Door" şarkısı ve o eşik metaforu, benim için geçmişte yaptığım hatalarla yüzleştiğim o sessiz anları temsil ediyor. Benim için "bırakmak", hataları bir yük gibi omuzlarımda sonsuza dek taşımak değil; onlardan birer ders çıkarıp eşiği hafifleyerek, geleceğe bakarak geçebilmektir.Bu projeyi geliştirirken beni en çok etkileyen an, kurduğum teknik altyapının oyuncuyu bu yüzleşmeye nasıl ittiğini görmekti. Gemini API ve duygu analizi modellerini entegre ederken aslında sadece bir oyun mekaniği kodlamıyordum. Oyuncunun odadaki sıradan nesnelerle etkileşime girip onlara bir şeyler söylemesi, aslında kendi yaşamındaki ağırlıkları sorgulaması demekti. Biz o nesnelerin iç sesini yapay zeka ile üretirken, oyuncuyu doğrudan Dylan'ın şarkısındaki o şerifin yerine koyuyorduk. Şerif o rozeti taşımakta nasıl zorlanıp çıkarmak istediyse, oyuncu da ekrandaki nesnelere yansıttığı kendi yüklerinden, kendi geçmiş hatalarından kurtulmaya çalışıyordu.  Benim için "Veda Yolu", algoritmaların ve sayıların birer aynaya dönüştüğü yer oldu. Yazdığım kodların, insanın kendi hatalarıyla yüzleşip onları geride bırakma cesaretini test eden felsefi bir araca dönüşmesi, bu projedeki en büyük kişisel keşfimdi.
 
 ---
 
